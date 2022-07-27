@@ -112,6 +112,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "crypto-js": "^4.1.1",
-    "esbuild": "^0.14.50"
+    "esbuild": "^0.14.50",
+    "esbuild-ifdef": "^0.1.8"
   }
 }
