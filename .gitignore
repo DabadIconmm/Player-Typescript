@@ -1,3 +1,18 @@
+BrightSign/
+Browser/
+Cisco/
+Gruntfile.js
+Lg Ipk/
+Lg/
+PlayerHtml5.njsproj
+PlayerHtml5.njsproj.user
+PlayerHtml5.njsproj.vspscc
+Samsung/
+SamsungVertical/
+Tizen/
+Toshiba/
+build/
+electron/
+package-lock.json
 node_modules
 .tfignore
-**/node_modules
