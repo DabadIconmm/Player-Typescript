@@ -1,0 +1,223 @@
+
+
+/* latin */
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Roboto Mono'), local('RobotoMono-Regular'), url("../fonts/RobotoMono-Medium.ttf") format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+h1 {
+	font-family: Arial, sans-serif;
+	font-weight: bold;
+	font-size: 6em;
+	line-height: 1em;
+}
+
+#codeText {
+    font-family: "Roboto Mono", monospace; /* Elegir una fuente en la que se distingan O y 0, 1 y l, y I y l */    
+    height: auto;
+    width: auto;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+  /*  centrado_vertical */
+  position: relative;
+  top: 50%;
+  width: 100%;
+  height: auto;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+#infoText {
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+  /*  centrado_vertical */
+    font-size: 3em;
+    position: absolute;
+  top: 50%;
+  height: auto;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+h2 {
+	font-family: Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	font-size: 3em;
+	line-height: 1em;
+}
+
+.inset-text {
+    /*color: rgba(22,22,22, 0.8);*/
+    text-align: center;
+    color: #FFFFFF;
+    text-shadow: 1px 4px 6px #c24c4c, 0 0 0 #000, 1px 4px 6px #c24c4c;
+}
+
+#divInfo { /* algunas propiedades se pisan en el configured */
+    background: #c24c4c;
+    display: block;
+    position: absolute;
+    left: 20%; /* 25% - el padding left */
+    bottom: 0px;
+    
+    /*margin: 25px auto;
+    padding: 10px 5%;*/
+    min-height: 175px;
+    height: auto;
+    width: 50%;
+    
+
+}
+
+#configure {    
+    padding: 0px;
+    margin: 0px;
+    position:absolute;
+    top:0px;
+    left:0px;
+} 
+
+@media (orientation: landscape) {
+
+    #configure {
+	    background: url(../bgConfigure_h.jpg) no-repeat center center fixed; 
+	    -webkit-background-size: contain;
+	    -moz-background-size: contain;
+	    -o-background-size: contain;
+	    background-size: contain;
+    }
+
+    .configured {
+	    background: url(../bgConfigured_h.jpg) no-repeat center center fixed; 
+	    -webkit-background-size: contain;
+	    -moz-background-size: contain;
+	    -o-background-size: contain;
+	    background-size: contain;
+    }
+    configure.configured #divInfo {
+	    /* Posicionamos dentro del fondo de configurado */
+	    left: 24%;
+        top: 35%;
+        bottom: auto;
+        /*margin: 25px auto;*/
+        /*padding: 10px 5%;*/
+        height: 34.26%;
+        width: 58.85%;
+        background: none;
+    }
+}
+
+@media (orientation: portrait) {
+    #configure {
+	    background: url(../bgConfigure_v.jpg) no-repeat center center fixed; 
+	    -webkit-background-size: contain;
+	    -moz-background-size: contain;
+	    -o-background-size: contain;
+	    background-size: contain;
+    }
+
+    .configured {
+	    background: url(../bgConfigured_v.jpg) no-repeat center center fixed; 
+	    -webkit-background-size: contain;
+	    -moz-background-size: contain;
+	    -o-background-size: contain;
+	    background-size: contain;
+    }
+    
+    configure.configured #divInfo {
+	    /* Posicionamos dentro del fondo de configurado */
+	    left: 15%; /* 20% - el padding left */
+        top: 36%;
+        bottom: auto;
+        /*margin: 25px auto;*/
+        /*padding: 10px 5%;*/
+        /*height: 175px;*/
+        height: 58.85%;
+        width: 60%;
+        background: none;
+    }
+}
+
+/* webOS */
+#configure {
+    
+	width: 100%;
+	height: 100%;
+	-webkit-background-size: contain;
+	-moz-background-size: contain;
+	-o-background-size: contain;
+	background-size: contain;
+} 
+/* fixed da problemas al girar lg a vertical */
+
+#configure.horizontal {    
+	background-position: center;
+	background-attachment: inherit;
+	background: url(../bgConfigure_h.jpg) black no-repeat; 
+	background-size: contain;
+}
+#configure.horizontal.configured {  
+	background-position: center;
+	background-attachment: inherit;
+	background: url(../bgConfigured_h.jpg) black no-repeat;   
+	background-size: contain;
+} 
+#configure.configured #divInfo {
+	/* Posicionamos dentro del fondo de configurado */
+	left: 24%;
+    top: 35%;
+    bottom: auto;
+    /*margin: 25px auto;*/
+    /*padding: 10px 5%;*/
+    height: 34.26%;
+    width: 58.85%;
+    background: none;
+    
+    width: 59%;
+    height: 36%;
+    left: 29%;
+    top: 37%;
+    
+}
+#configure.vertical {    
+	background-position: center;
+	background-attachment: inherit;
+	background: url(../bgConfigure_v.jpg) black no-repeat; 
+	background-size: contain;
+}
+#configure.vertical.configured {  
+	background-position: center;
+	background-attachment: inherit;
+	background: url(../bgConfigured_v.jpg) black no-repeat;   
+	background-size: contain;
+}
+#configure.vertical.configured #divInfo {
+	/* Posicionamos dentro del fondo de configurado */
+	left: 15%; /* 20% - el padding left */
+    top: 36%;
+    bottom: auto;
+    /*margin: 25px auto;*/
+    /*padding: 10px 5%;*/
+    height: 58.85%;
+    width: 60%;
+    background: none;
+    
+    width: 70%;
+    height: 36%;
+    left: 15%;
+    top: 30%;
+}
+
+
+
+
+

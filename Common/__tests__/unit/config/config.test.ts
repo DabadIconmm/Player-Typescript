@@ -1,0 +1,1 @@
+//TODO comprobar si funciona cada getter

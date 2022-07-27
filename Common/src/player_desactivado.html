@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Player desactivado</title>
+        
+		<style type="text/css">
+		    html {background: black; color:white; font-size: xx-large; text-align: center;font-family: Sans-Serif;}
+		    .ocultado {display: none; }
+		    button {font-size: xx-large; 
+		            margin: 5px 40px;
+		            width: 50%;
+                    display: inline-block;
+                    outline: 10px solid transparent;
+                    outline-offset: 2px;
+		            
+		            }
+		    button.seleccionado {outline-color: Orange; }
+		</style>
+        <script type="text/javascript" language="javascript" >
+            "use strict";
+            var ocultado = true;
+            var seleccionado = 0;
+            function alternar() {
+
+                switch (seleccionado) {
+
+
+                    case 2:
+                        seleccionado = 1;
+                        document.getElementById("boton-reconfigurar").classList.add("seleccionado");
+                        document.getElementById("boton-ocultar").classList.remove("seleccionado");
+                        break;
+                    case 0:
+                    case 1:
+                    default:
+                        seleccionado = 2;
+                        document.getElementById("boton-reconfigurar").classList.remove("seleccionado");
+                        document.getElementById("boton-ocultar").classList.add("seleccionado");
+                        break;
+                }
+            }
+            function configurar() {
+                window.localStorage.clear(); // Con borrar PlayerDesactivado valdria
+                document.location = "index.html";
+            };
+            function ocultarOMostrar() {
+                if (ocultado) {
+                    document.getElementById("mensaje").classList.remove("ocultado");
+                    ocultado = false;
+                } else {
+                    document.getElementById("mensaje").classList.add("ocultado");
+                    ocultado = true;
+                }
+            }
+            document.onkeydown = function (event) {
+                var keyCode = event.keyCode;
+                if (ocultado) {
+                    ocultarOMostrar();
+                    return;
+                }
+                switch (keyCode) {
+                    // SSSP usa constantes como tvKey.KEY_LEFT... esperemos que los keycodes sean los mismos       
+                    case 37: // IZQUIERDA   
+                        alternar();
+                        break;
+                    case 38: // ARRIBA  
+                        alternar();
+                        break;
+                    case 39: // DERECHA
+                        alternar();
+                        break;
+                    case 40: // Abajo 
+                        alternar();
+                        break;
+                    case 13: // Enter
+                        if (ocultado) {
+                            ocultarOMostrar();
+                        } else {
+                            if (seleccionado === 2 && !ocultado) {
+                                ocultarOMostrar();
+                            } else {
+                                
+                                
+                                configurar();
+                            }
+                        }
+
+                        break;
+                    default:
+                        console.log('unknown key pressed ' + keyCode);
+                        // Do something or call the event handler method
+                }
+            }
+        </script>
+
+</head>
+<body>
+    <div id="mensaje" class="ocultado">
+        <img src="assets/logoDNV.PNG" />
+        <p>This Deneva player has been deactivated. If you want to reactivate it, please contact your provider before reconfiguring the player.</p>
+        <p>Este player Deneva ha sido desactivado. Si desea reactivarlo, contacte con su proveedor antes de reconfigurarlo.</p>
+        <p><button id="boton-reconfigurar" onclick="configurar();">Reconfigure / Reconfigurar</button></p>
+        <p><button id="boton-ocultar" onclick="ocultarOMostrar();">Hide message / Ocultar mensaje</button></p>
+    
+    </div>
+
+</body>
+</html>

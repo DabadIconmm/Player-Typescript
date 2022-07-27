@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Player desactivado</title>
+        
+		<style type="text/css">
+		    html {background: black; color:white; font-size: xx-large; text-align: center;font-family: Sans-Serif;}
+		    .ocultado {display: none; }
+		    button {font-size: xx-large; 
+		            margin: 5px 40px;
+		            width: 50%;
+                    display: inline-block;
+                    outline: 10px solid transparent;
+                    outline-offset: 2px;
+		            
+		            }
+		    button.seleccionado {outline-color: Orange; }
+		</style>
+        <script type="text/javascript" language="javascript" >
+            "use strict";
+            
+            document.onkeydown = function (event) {
+                var keyCode = event.keyCode;
+                document.location = "index.html";
+
+            }
+        </script>
+
+</head>
+<body>
+    <div id="mensaje">
+        <img src="assets/logoDNV.PNG" />
+        <p>This Deneva player has been waiting to be activated for too long. Press any button to try again.</p>
+        <p>Este player Deneva ha esperado demasiado tiempo para ser activado. Pulse cualquier botón para intentarlo de nuevo.</p>
+    
+    </div>
+
+</body>
+</html>

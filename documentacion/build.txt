@@ -1,0 +1,63 @@
+﻿
+PlayerHTML5
+
+La idea del PlayerHTML5 es un player que se ejecute en un navegador y que sea capaz de ejecutarse en la mayoría de plataformas posibles.
+
+El problema es que un navegador, por si mismo, no nos aporta toda la funcionalidad que necesitamos (p.ej. escrituras en disco)
+
+Existe un directorio Common, que contiene los archivos comunes a todas las plataformas.
+Después existe un directorio para cada plataforma, con archivos especificos.
+
+Plataformas soportadas:
+- Browser. La idea es poder ejecutar el player en un navegador, se hizo para pruebas rápidas, pero apenas está mantenida...
+- Lg (webOS2)
+- Samsung SSSP2
+- electron (linux, en x86 y arm (raspberry pi)) No se usó nw.js por problemas de codecs de video.
+
+A la hora de hacer la compilacion, en funcion de la configuracion de compilacion; se genera la aplicación
+juntando el directoio Common y el especifico de la plataforma y se empaqueta (ofuscando si es necesario).
+
+Para LG y para Samsung, se empaquetan en un .zip y, por comodidad, se suben a un directorio del 13.49.
+Con Samsung hay que acordarse de incrementar la version del sssp_config.xml que está el el direcotorio del .zip
+
+En el caso de Samsung, para players verticales se necesita una versión con una configuración distinta.
+En otras plataformas se detecta y rota en tiempo de ejecución.
+
+Las configuraciones que tienen "release" en el nombre, son minificadas con ajaxmin para ofuscar el código.
+Se generan archivos .map que deberian servidor para desofuscara el codigo.
+Estos archivos no se incluyen en los zips.
+
+El caso de electron es algo especial, puesto que se hace parte desde MSBuild (combinar los directorios, minificación) 
+y parte desde node.js (generar .asar, descargar y empaquetar) 
+
+En el caso de Electron, al realizarse el build desde node.js, se instalaran dependencias en el directorio de compilación. Entre esas dependencias, está el motor de chromium para varias plataformas.
+Node.js cachea las descargas, por lo que no se descargarán cada vez.
+electron-packager y electron-builder son capaces de generar archivos .deb pero, en principio no los usaremos, para no requerir permisos de root para instalarnos.
+
+- electron-builder genera archivos .deb usando fpm. fpm es capaz de generar más tipos de paquetes, pero creo que implica instalar Ruby...
+- Hay que tener cuidado con los permisos de unix ya que windows, al no soportarlos, seguramente cause problemas al empaquetar. Principalmente con el permiso de ejecución.
+- electron-packager, en principio no soporta arm, asi que lo parcheamos para que si lo soporte
+
+Hay que añadir flash "a mano", al menos al build de raspberry pi.
+- https://www.raspberrypi.org/forums/viewtopic.php?t=99202
+- https://www.raspberrypi.org/forums/viewtopic.php?f=66&t=99202&p=936916#p936916
+y añadirlo en el main.js
+	app.commandLine.appendSwitch('ppapi-flash-path', './PepperFlash/libpepflashplayer.so');
+	app.commandLine.appendSwitch('ppapi-flash-version', '20.0.0.267');
+Asi que hemos añadido eso en el caso de la raspberry pi. Habría que ver si en el caso de otras distros hace falta o puede usar la del sistema.
+
+Probablemente lo suyo sería añadir, como último paso, la generaión de un tar.gz en el que el binario ("el exe") de Deneva sea ejecutable.
+
+Dependencias de compilación de MSBuild
+- MSBuild.Community.Tasks (generar zips) https://github.com/loresoft/msbuildtasks
+- MSBuild Extension Pack https://github.com/mikefourie/MSBuildExtensionPack
+- AjaxMin
+- MSBuild.NodeTools https://github.com/kmees/MSBuild.NodeTools (Están metidas en el proyecto. No conseguí que me funcionase bien la versión de NuGet)
+- NodeJS (>= 5.x)
+	Esta versión de node no tiene tantos problemas con el limite de tamaño de ruta de windows
+	A su vez node lleva sus propias dependencias, que deberian instalarse solas...
+	- Buscar una forma de no reinstalarlas en cada build, y que al mismo tiempo no tengan que estar en control de versiones.
+	- Estas dependencias estan en el package.json y se instalan con la tarea preempaquetar. Hay versiones hardcodeadas, por lo que de vez en cuando igual deberiamos actualizarlas.
+
+
+
