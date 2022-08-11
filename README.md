@@ -6,6 +6,11 @@ Para verlo en VSCode: `Control shift v`
 - Sigo los principios de "The art of Unit Testing" -> \\\\iconmultimedia.com\datos\usuarios\orion\Libros\The Art of Unit Testing 2nd Ed - Roy Osherove.pdf
 - No hacemos TDD
 
+# init 
+- Es una chapuza de momento, tengo que cambiarlo, probablemente a scripts de npm?. De momento ejecutar con git bash:
+- ./run.sh init.
+- para hacer build ./run.sh build.
+
 # Extensiones vscode
 se pueden instalar rapido con code --install-extension
 

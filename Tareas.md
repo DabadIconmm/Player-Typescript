@@ -41,3 +41,6 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 ## VSCode (*)
 - Crear una configuración del Prettier ([Documentación](https://prettier.io/docs/en/options.html))
     [e intergarlo con ESLint](https://prettier.io/docs/en/integrating-with-linters.html)
+
+## Build (orion)
+- Arreglarla, no puede estar en bash si todo el mundo usa windows.
