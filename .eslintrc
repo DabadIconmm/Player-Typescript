@@ -5,9 +5,7 @@
       "@typescript-eslint"
     ],
     "extends": [
-      "eslint:recommended",
-      //"plugin:@typescript-eslint/eslint-recommended"
-      //"plugin:@typescript-eslint/recommended"
+      "eslint:recommended"
     ],
     "rules": {
         "prefer-const":"error",
@@ -19,7 +17,7 @@
         "@typescript-eslint/no-non-null-assertion": "off",
         "no-unused-vars": "off",
         "no-undef": "off",
-        "no-mixed-spaces-and-tabs": "warn"
+        "no-mixed-spaces-and-tabs": "off"
 
 
 

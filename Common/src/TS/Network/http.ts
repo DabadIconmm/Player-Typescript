@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { log } from "../DI";
+import { log } from "../Utils/logger";
 import { CasosUso, NivelLog } from "../Utils/logger";
 import { debeLoguearFallosDeRed } from "./servidor";
 type Responses = ArrayBuffer | Document | Blob | JSON | string;
@@ -14,14 +14,14 @@ type HTTPResponse = {
 }
 export type HTTPError = AxiosError<unknown, unknown>; // Si se usa algo que no es axios cambiar esto
 
-interface IHttpRequest {
+export interface IHttpRequest {
 	get(url: string, cfg?: config): Promise<HTTPResponse>;
 	post(url: string, cfg?: config): Promise<HTTPResponse>;
 	put(url: string, cfg?: config): Promise<HTTPResponse>;
 	delete(url: string, cfg?: config): Promise<HTTPResponse>;
 }
 
-export class AxiosHTTP implements IHttpRequest {
+class AxiosHTTP implements IHttpRequest {
 	private readonly instance = axios.create({
 		timeout: 45000,
 		validateStatus: status => status >= 200 && status < 400,
@@ -85,6 +85,7 @@ export class AxiosHTTP implements IHttpRequest {
 	}
 }
 
+export const http = new  AxiosHTTP();
 /* 
     Ejemplos de uso: 
     async () => {

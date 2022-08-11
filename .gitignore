@@ -16,3 +16,5 @@ electron/
 package-lock.json
 node_modules
 .tfignore
+
+pnpm-lock.yaml

@@ -1,4 +1,4 @@
-import { log } from "../DI";
+import { log } from "../Utils/logger";
 import { encodings } from "../Utils/comun";
 import { CasosUso, NivelLog } from "../Utils/logger";
 
@@ -8,11 +8,12 @@ export interface IFileSystem {
     
     read(ruta: string, encoding: FileOpts): Promise<Buffer | string>; // si encoding es null debería devolver un buffer
     write(ruta: string, mensaje: writeable, encoding?: FileOpts ): Promise<void>;
+	delete(ruta: string): Promise<void>;
 }
 
 
 
-export class fsNode implements IFileSystem {
+class fsNode implements IFileSystem {
 	private fs = require("fs") ;
 	public read<T = FileOpts extends null ? Promise<Buffer> : Promise<string>>(ruta: string, enc: FileOpts = encodings.utf): Promise<T> { // si encoding es null debería devolver un Buffer
         
@@ -25,6 +26,7 @@ export class fsNode implements IFileSystem {
 			});
 		});
 	}
+
 	public write(ruta: string, mensaje: writeable, enc = encodings.utf): Promise<void> {
 		log("comenzando ", CasosUso.fileSystem, NivelLog.verbose);
 		return new Promise((resolve, reject) => {
@@ -36,4 +38,16 @@ export class fsNode implements IFileSystem {
 			);
 		});
 	}
+	public delete(ruta: string): Promise<void> {
+		log(`borrando ${ruta}`, CasosUso.fileSystem, NivelLog.verbose);
+		return new Promise((resolve, reject) => {
+			this.fs.rm(ruta, ((err: Error)=>{
+				if (err) reject(err);
+				log("operación OK", CasosUso.fileSystem, NivelLog.verbose);
+				resolve();
+			}))
+		});
+	}
 }
+
+export const fs = new fsNode();

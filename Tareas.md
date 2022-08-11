@@ -29,3 +29,7 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 - Implementar lo que se pueda
 - Dejar optimizados los asyncs
 - No hacen falta tests
+
+## VSCode
+- Crear una configuración del Prettier ([Documentación](https://prettier.io/docs/en/options.html))
+    [e intergarlo con ESLint](https://prettier.io/docs/en/integrating-with-linters.html)

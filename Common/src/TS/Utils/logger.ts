@@ -19,15 +19,14 @@ export enum NivelLog {
 
 interface ILogger{ 
     log(msg: string, casos: CasosUso | string, nivel: NivelLog): void;
-    setNivelVerbosity(verbosity: NivelLog): void;
 }
 
 // TODO usar pino (para node)
-export class ConsoleLogger implements ILogger{ // Console logger
-	private verbosity: NivelLog = NivelLog.debug;
-	private default = NivelLog.info;
-	public log(msg: string, caso: CasosUso | string, nivel: NivelLog = this.default){
-		if (nivel < this.verbosity) return;
+
+const verbosity: NivelLog = NivelLog.debug;
+class ConsoleLogger implements ILogger{ // Console logger
+	public log(msg: string, caso: CasosUso | string, nivel: NivelLog = NivelLog.info){
+		if (nivel < verbosity) return;
         
 		switch (nivel) {
 		case NivelLog.verbose: console.debug(`${new Date()} [verbose] de ${caso}: ${msg}`); break;
@@ -37,7 +36,9 @@ export class ConsoleLogger implements ILogger{ // Console logger
 		case NivelLog.error: console.error(`${new Date()} [error] de ${caso}: ${msg}`); break;
 		}
 	}
-	public setNivelVerbosity(verbosity: NivelLog): void {
-		this.verbosity = verbosity;       
-	}
+    constructor(){
+        this.log("log activado", CasosUso.alarmas)
+    }
 }
+
+export const log = new ConsoleLogger().log

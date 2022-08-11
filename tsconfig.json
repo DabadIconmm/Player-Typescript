@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
         "strict":true,
-        "target":"ES2016",
+        "target":"ESNext",
         "outDir": "build/",
         "sourceMap": true,
-        "moduleResolution": "node",
-        "module": "CommonJS"
+        "moduleResolution": "Node",
+        "module": "CommonJS",
+        "esModuleInterop": true
     },
     "exclude": ["Common/src/TS/Calendarios/**/*", "Common/src/TS/Playlist/**/*", "src/node_modules"]
 }

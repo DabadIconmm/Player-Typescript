@@ -1,14 +1,17 @@
-import { log, cfg, http } from "../../DI";
-import { PID } from "./../comun";
-import { CasosUso, NivelLog } from "./../logger";
+import { ObjectID, PID } from "./../comun";
 import { config } from "./interfaces";
 
 // # IFDEF NODE
-import CryptoJS = require("crypto-js");
+// import CryptoJS = require("crypto-js");
+import * as CryptoJS from "crypto-js"
 import { debeLoguearFallosDeRed } from "../../Network/servidor";
 import { SystemInfo } from "../../SystemInfo/systemInfo";
 import { formatearFecha, formatearFechaUTCDia } from "../utiles";
-import { HTTPError } from "../../Network/http";
+import { http, HTTPError } from "../../Network/http";
+import { cfg } from "./config";
+import { stringToTimestamp } from "../utiles";
+
+import { CasosUso, log, NivelLog } from "./../logger";
 // # ENDIF
 
 type configResponse = { doc: Document | null; timestamp?: string };
@@ -68,13 +71,22 @@ export class ConfigRequester {
 				}
 
 				const objId = cfg.getInt("MyOwnCode", 0);
-				const fecha = formatearFechaUTCDia(new Date());
-				const token = CryptoJS.SHA256(id + ";" + fecha).toString(
+
+				const token = CryptoJS.SHA256(id + ";" + formatearFechaUTCDia(new Date())).toString(
 					CryptoJS.enc.Hex
 				);
-				const fechaHTTP = new Date(
-					cfg.getConfigTimeStamp()
-				).toUTCString();
+
+				let fecha;
+				try {
+					const timeString = cfg.get("configLastUpdated");
+					const numero = stringToTimestamp(
+						timeString.replace("T", " ")
+					).getTime();
+					fecha = numero;
+				} catch (e) {
+					fecha = 0;
+				}
+				const fechaHTTP = new Date(fecha).toUTCString();
 
 				if (!objId)
 					throw new Error(
@@ -86,7 +98,7 @@ export class ConfigRequester {
 					"X-Token": token,
 					"If-Modified-Since": fechaHTTP,
 				};
-
+				
 				const res = await http.get(`${url}/${objId}`, {
 					headers: headers,
 				});
@@ -111,7 +123,7 @@ export class ConfigRequester {
 				log(
 					"urlWebCfgServiceInicial " + urlFallback,
 					CasosUso.settings,
-					NivelLog.debug
+					NivelLog.verbose
 				);
 				log("url " + url, CasosUso.settings, NivelLog.debug);
 				if (!id) {
@@ -232,7 +244,7 @@ export class ConfigRequester {
 		function parseConfigXML(
 			xml: Document | null,
 			timeStamp: string | undefined
-		) {
+		): config | null {
 			if (xml === null) {
 				log(
 					"[CONFIGUARCION] La configuracion devuelta por WSRequest no tiene cambios",
@@ -325,21 +337,22 @@ export class ConfigRequester {
 				"No tenemos PID ¿Es la primera vez que arrancamos?",
 				CasosUso.settings,
 				NivelLog.warn
-			);
-			/*
-            TODO:
-            #IFDEF TOSHIBA
-
-            var upgradedFirm = DatabaseManager.read("TOSHIBA_UPGRADED_FIRM");
-
-            if (upgradedFirm == "true") {
-                console.warn("[CONFIG](TOSHIBA) No cargamos cfg de disco porque se esta actualizando el firm.");
-            } else {
-                that.cargarCfgDeDisco();
-            }`
-            #ELSE
-            */
-			throw new Error("no configurados (sin PID).");
+				);
+				/*
+				TODO:
+				#IFDEF TOSHIBA
+				
+				var upgradedFirm = DatabaseManager.read("TOSHIBA_UPGRADED_FIRM");
+				
+				if (upgradedFirm == "true") {
+					console.warn("[CONFIG](TOSHIBA) No cargamos cfg de disco porque se esta actualizando el firm.");
+				} else {
+					that.cargarCfgDeDisco();
+				}`
+				#ELSE
+				*/
+		   throw new Error("No estamos configurados y no tenemos PID"); 
+		   
 		}
 
 		if (
@@ -349,10 +362,8 @@ export class ConfigRequester {
 			if (!pid)
 				throw new Error("No estamos configurados y no tenemos PID");
 
-			ConfigRequester.urlWebCfgServiceInicial = await inicializarUrlCfg(
-				pid,
-				cfg.getInt("configEID", 0)
-			);
+			ConfigRequester.urlWebCfgServiceInicial = 
+				await inicializarUrlCfg(pid, cfg.getInt("configEID", 0));
 		}
 
 		/*
@@ -363,8 +374,10 @@ export class ConfigRequester {
 			const config = await pedirConfigAlServidor(pid);
 			return parseConfigXML(config.doc, config.timestamp);
 		} catch (error) {
-			this.errHandler((<Error>error).toString());
-			throw new Error("Error pidiendo configuracion");
+			const e = <Error>error;
+			this.errHandler(e.toString());
+			e.message = "Error pidiendo configuracion: " + e.message
+			throw e;
 		}
 	}
 }
