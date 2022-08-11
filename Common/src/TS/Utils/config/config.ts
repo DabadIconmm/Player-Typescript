@@ -18,8 +18,6 @@ class CommonConfig {
 	protected internal: config = {};
 
 	//#region getters
-
-	//TODO tests
 	private setDefault<T extends number | string | boolean | undefined>(
 		nombre: string, 
 		valor: T
