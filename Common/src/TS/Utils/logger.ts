@@ -41,4 +41,6 @@ class ConsoleLogger implements ILogger{ // Console logger
     }
 }
 
-export const log = new ConsoleLogger().log
+// Ver ejemplos de uso si se va a hacer un archivo nuevo. 
+// TODO: Hay una mejor manera?
+export const logExport = new ConsoleLogger().log; 

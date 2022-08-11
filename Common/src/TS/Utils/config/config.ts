@@ -1,9 +1,11 @@
 import { ConfigRequester } from "./ConfigRequester";
 import { fs } from "../../IO/FileSystem";
-import { CasosUso, log, NivelLog } from "./../logger";
+import { CasosUso, logExport, NivelLog } from "./../logger";
 import { config, IConfig } from "./interfaces";
 import { stringToTimestamp } from "../utiles";
-
+function log(str: string, verbosity?: NivelLog){
+	logExport(str, CasosUso.settings, verbosity )
+}
 
 const settings = {
 	PL_KEY: "pl",
@@ -27,10 +29,7 @@ class CommonConfig {
 				`Setting ${nombre} no encontrado y no hay valor por defecto.`
 			);
 		this.settings[nombre] = valor.toString();
-		log(
-			`config.get. Devolvemos el valor por defecto para ${nombre}: ${valor}`,
-			CasosUso.settings
-		);
+		log(`config.get. Devolvemos el valor por defecto para ${nombre}: ${valor}`);
 	}
 	public get(nombre: string, defecto?: string): string {
 		const ret = this.settings[nombre] ?? this.internal[nombre];
@@ -86,7 +85,7 @@ class CommonConfig {
 
 class ConfigNode extends CommonConfig implements IConfig {
 	public async cargar(): Promise<void> {
-		log("Comenzando carga de settings", CasosUso.settings);
+		log("Comenzando carga de settings");
 
 		try {
 			const res = fs.read(settings.CFG_PATH);
@@ -113,14 +112,12 @@ class ConfigNode extends CommonConfig implements IConfig {
 		} catch (error) {
 			log(
 				"no se pudo cargar los settings" + JSON.stringify(error),
-				CasosUso.settings,
 				NivelLog.error
 			);
 			// Si no podemos cargar de disco
 			//(quizas no se ha configurado por primera vez)
 			log(
 				"Error cargando config de disco, fallback llamada al servidor",
-				CasosUso.settings,
 				NivelLog.warn
 			);
 			try {
@@ -131,7 +128,6 @@ class ConfigNode extends CommonConfig implements IConfig {
 					this.backup().catch((err) =>
 						log(
 							`No se pudo guardar en disco: ${err}`,
-							CasosUso.settings,
 							NivelLog.error
 						)
 					);
@@ -145,7 +141,6 @@ class ConfigNode extends CommonConfig implements IConfig {
 				log(
 					`ERROR: No se pudo cargar la configuracion del disco ni del servidor.
 						${error}`,
-					CasosUso.settings,
 					NivelLog.fatal
 				);
 			}

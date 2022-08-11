@@ -1,4 +1,4 @@
-import { log } from "../Utils/logger";
+import { logExport } from "../Utils/logger";
 import { encodings } from "../Utils/comun";
 import { CasosUso, NivelLog } from "../Utils/logger";
 
@@ -17,33 +17,33 @@ class fsNode implements IFileSystem {
 	private fs = require("fs") ;
 	public read<T = FileOpts extends null ? Promise<Buffer> : Promise<string>>(ruta: string, enc: FileOpts = encodings.utf): Promise<T> { // si encoding es null debería devolver un Buffer
         
-		log("comenzando ", CasosUso.fileSystem, NivelLog.verbose);
+		logExport("comenzando ", CasosUso.fileSystem, NivelLog.verbose);
 		return new Promise<T>((resolve, reject)=>{
 			this.fs.readFile(ruta,{encoding: enc},(err: Error, data: T)=>{
 				if (err) reject(err);
-				log("operación OK", CasosUso.fileSystem, NivelLog.verbose);
+				logExport("operación OK", CasosUso.fileSystem, NivelLog.verbose);
 				resolve(data);                
 			});
 		});
 	}
 
 	public write(ruta: string, mensaje: writeable, enc = encodings.utf): Promise<void> {
-		log("comenzando ", CasosUso.fileSystem, NivelLog.verbose);
+		logExport("comenzando ", CasosUso.fileSystem, NivelLog.verbose);
 		return new Promise((resolve, reject) => {
 			this.fs.writeFile(ruta, mensaje, {encoding: enc}, ((err: Error)=>{
 				if (err) reject(err);
-				log("operación OK", CasosUso.fileSystem, NivelLog.verbose);
+				logExport("operación OK", CasosUso.fileSystem, NivelLog.verbose);
 				resolve();
 			})
 			);
 		});
 	}
 	public delete(ruta: string): Promise<void> {
-		log(`borrando ${ruta}`, CasosUso.fileSystem, NivelLog.verbose);
+		logExport(`borrando ${ruta}`, CasosUso.fileSystem, NivelLog.verbose);
 		return new Promise((resolve, reject) => {
 			this.fs.rm(ruta, ((err: Error)=>{
 				if (err) reject(err);
-				log("operación OK", CasosUso.fileSystem, NivelLog.verbose);
+				logExport("operación OK", CasosUso.fileSystem, NivelLog.verbose);
 				resolve();
 			}))
 		});

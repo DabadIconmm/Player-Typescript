@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { log } from "../Utils/logger";
+import { logExport } from "../Utils/logger";
 import { CasosUso, NivelLog } from "../Utils/logger";
 import { debeLoguearFallosDeRed } from "./servidor";
 type Responses = ArrayBuffer | Document | Blob | JSON | string;
@@ -42,13 +42,13 @@ class AxiosHTTP implements IHttpRequest {
 					ex.code ===
 					(AxiosError.ECONNABORTED || AxiosError.ETIMEDOUT)
 				) {
-					log(
+					logExport(
 						"Timeout en la request.",
 						CasosUso.settings,
 						NivelLog.error
 					);
 				}
-				log(
+				logExport(
 					"[SERVIDOR] Error en la conexion: codigo " +
 						ex.response?.status,
 					CasosUso.settings,

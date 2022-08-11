@@ -11,8 +11,13 @@ import { http, HTTPError } from "../../Network/http";
 import { cfg } from "./config";
 import { stringToTimestamp } from "../utiles";
 
-import { CasosUso, log, NivelLog } from "./../logger";
+import { CasosUso, logExport, NivelLog } from "./../logger";
 // # ENDIF
+
+function log(str: string, verbosity?: NivelLog){
+	logExport(str, CasosUso.settings, verbosity )
+}
+
 
 type configResponse = { doc: Document | null; timestamp?: string };
 export class ConfigRequester {
@@ -25,7 +30,7 @@ export class ConfigRequester {
 			// TODO cambiar al config?
 			log(
 				"[SERVIDOR] Error al pedir configuracion: " + e,
-				CasosUso.settings,
+				
 				NivelLog.error
 			);
 		}
@@ -43,11 +48,11 @@ export class ConfigRequester {
 
 			if (!response)
 				throw new Error("sin respuesta del servidor pidiendo config");
-			log("Respuesta OK", CasosUso.settings, NivelLog.info);
+			log("Respuesta OK",  NivelLog.info);
 			SystemInfo.setEstadoConectividadConfiguracion("OK");
 			log(
 				"Respuesta de configuracion: " + response,
-				CasosUso.settings,
+				
 				NivelLog.debug
 			);
 			return response;
@@ -122,10 +127,10 @@ export class ConfigRequester {
 
 				log(
 					"urlWebCfgServiceInicial " + urlFallback,
-					CasosUso.settings,
+					
 					NivelLog.verbose
 				);
-				log("url " + url, CasosUso.settings, NivelLog.debug);
+				log("url " + url,  NivelLog.debug);
 				if (!id) {
 					throw new Error(
 						"[SERVIDOR] No pedimos configuración, PID =" + id
@@ -145,7 +150,7 @@ export class ConfigRequester {
 					"Content-Type": "text/xml; charset=UTF-8",
 				};
 
-				log("Pidiendo configuracion [WCF]", CasosUso.settings);
+				log("Pidiendo configuracion [WCF]");
 				const response = await http.post(url, {
 					data: xml,
 					headers: headers,
@@ -163,7 +168,7 @@ export class ConfigRequester {
 		): Promise<string> {
 			log(
 				"[SERVIDOR] Pedimos url de configuración inicial, PID = " + pid,
-				CasosUso.settings,
+				
 				NivelLog.info
 			);
 
@@ -182,7 +187,7 @@ export class ConfigRequester {
 			try {
 				log(
 					"Pidiendo url de configuracion inicial",
-					CasosUso.settings,
+					
 					NivelLog.info
 				);
 				const res = await http.get(url, {
@@ -194,7 +199,7 @@ export class ConfigRequester {
 				SystemInfo.setEstadoConectividadConfiguracion("OK");
 				log(
 					"Respuesta de direccion de configuracion " + res.data,
-					CasosUso.settings,
+					
 					NivelLog.debug
 				);
 				const doc = <Document>res.data;
@@ -228,7 +233,7 @@ export class ConfigRequester {
 					log(
 						"[SERVIDOR] El servidor no implementa el método para la url inicial, usamos el por defecto..." +
 							e,
-						CasosUso.settings,
+						
 						NivelLog.error
 					);
 					return (
@@ -248,7 +253,7 @@ export class ConfigRequester {
 			if (xml === null) {
 				log(
 					"[CONFIGUARCION] La configuracion devuelta por WSRequest no tiene cambios",
-					CasosUso.settings,
+					
 					NivelLog.info
 				);
 				return null;
@@ -256,7 +261,7 @@ export class ConfigRequester {
 			if (!cfg.getInt("configPID", 0)) {
 				log(
 					"[CONFIGURACION] Nos ha llegado una respuesta de configuracion, pero no tenemos ID... Puede que acaben de reconfigurarnos, descartamos la configuración",
-					CasosUso.settings,
+					
 					NivelLog.warn
 				);
 				return null;
@@ -320,7 +325,7 @@ export class ConfigRequester {
 				// Estamos configurados de antes...
 				log(
 					"[CONFIGURACION] Estabamos actualizados pero no nos ha llegado una configuracion valida",
-					CasosUso.settings,
+					
 					NivelLog.warn
 				);
 				return null;
@@ -335,7 +340,7 @@ export class ConfigRequester {
 		if (pid === undefined) {
 			log(
 				"No tenemos PID ¿Es la primera vez que arrancamos?",
-				CasosUso.settings,
+				
 				NivelLog.warn
 				);
 				/*

@@ -1,5 +1,5 @@
 /* eslint-disable */
- // @ts-nocheck
+// @ts-nocheck
 
 export function formatearFecha(date: Date, pretty: boolean) {
 
