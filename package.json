@@ -85,7 +85,6 @@
     "lint": "eslint . --fix"
   },
   "devDependencies": {
-    "@shopify/eslint-plugin-assemblyscript": "^0.1.13",
     "@swc-node/register": "^1.5.1",
     "@types/crypto-js": "^4.1.1",
     "@types/jest": "^28.1.6",
