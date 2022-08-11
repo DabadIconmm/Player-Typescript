@@ -339,7 +339,7 @@ export class ConfigRequester {
 				NivelLog.warn
 				);
 				/*
-				TODO:
+				TODO: Esta cosa no deberia de existir aqui. Debería estar en algun sitio de la pipeline de inicio
 				#IFDEF TOSHIBA
 				
 				var upgradedFirm = DatabaseManager.read("TOSHIBA_UPGRADED_FIRM");

@@ -4,6 +4,9 @@ Cada vez que se haga una funcionalidad nueva hay que
 2. Plantear la interfaz
 3. Hacer pruebas unitarias **solo contra la interfaz, nunca contra la implementación**. Eso es porque si se cambia la implementación un test nunca debería de fallar.
 
+## Estructura de archivos
+- Está desordenado: ordenar, decidir una lógica y un protocolo de donde va cada cosa.
+
 ## Utiles 
 Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto para ir aprendiendo ts
 - No es necesaria una interfaz para esto pero se puede hacer
@@ -25,10 +28,13 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 - Tests (con mocks)
 
 ## Init pipeline
+- Sigue el principio de [Chain of Responsibility](https://sourcemaking.com/design_patterns/chain_of_responsibility)
 - Añadir al TODO
 - Implementar lo que se pueda
 - Dejar optimizados los asyncs
+- Añadir hooks (por ejemplo: añadir hooks para los turnos, bigData, etc.)
 - No hacen falta tests
+- [Compilación condicional](https://www.npmjs.com/package/esbuild-ifdef) y diferentes archivos para funciones de cada plataforma.
 
 ## VSCode
 - Crear una configuración del Prettier ([Documentación](https://prettier.io/docs/en/options.html))
