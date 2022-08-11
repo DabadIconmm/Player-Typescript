@@ -6,7 +6,8 @@ export enum CasosUso {
     avisos,
     playlist,
     settings,
-    fileSystem
+    fileSystem,
+    network
 }
 export enum NivelLog {
     verbose = 0,

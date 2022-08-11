@@ -18,9 +18,5 @@
 	"node reject promise" : {
 		"body" : "if (err) reject(err);",
 		"prefix": "nodeReject",		
-	},
-	"log settings" : {
-		"body" : "log('${1:msg}', CasosUso.settings, NivelLog.${2:logLevel})",
-		"prefix": "logs"
 	}
 }

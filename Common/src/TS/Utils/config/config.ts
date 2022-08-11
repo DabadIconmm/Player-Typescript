@@ -4,7 +4,7 @@ import { CasosUso, logExport, NivelLog } from "./../logger";
 import { config, IConfig } from "./interfaces";
 import { stringToTimestamp } from "../utiles";
 function log(str: string, verbosity?: NivelLog){
-	logExport(str, CasosUso.settings, verbosity )
+	logExport(str, CasosUso.network, verbosity )
 }
 
 const settings = {

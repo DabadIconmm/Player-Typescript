@@ -2,6 +2,11 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { logExport } from "../Utils/logger";
 import { CasosUso, NivelLog } from "../Utils/logger";
 import { debeLoguearFallosDeRed } from "./servidor";
+
+function log(str: string, verbosity?: NivelLog){
+	logExport(str, CasosUso.network, verbosity )
+}
+
 type Responses = ArrayBuffer | Document | Blob | JSON | string;
 type config = {
 	data?: unknown;
@@ -42,16 +47,14 @@ class AxiosHTTP implements IHttpRequest {
 					ex.code ===
 					(AxiosError.ECONNABORTED || AxiosError.ETIMEDOUT)
 				) {
-					logExport(
+					log(
 						"Timeout en la request.",
-						CasosUso.settings,
 						NivelLog.error
 					);
 				}
-				logExport(
+				log(
 					"[SERVIDOR] Error en la conexion: codigo " +
 						ex.response?.status,
-					CasosUso.settings,
 					NivelLog.error
 				);
 			}
