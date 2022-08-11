@@ -15,9 +15,9 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 
 ## Logger
 
-- Integrar [pino](https://github.com/pinojs/pino) - mandar por rabbit
+- Integrar [pino](https://github.com/pinojs/pino) - mandar por rabbit/kafka
 - Idealmente esto deberia ir en un  worker thread
-- Plantear cual va a ser la estructura de los logs (AGG)
+- Plantear cual va a ser la estructura de los logs (AGG) -> Documentar en logger.ts
 - Preparar la implementación para integrar las alarmas
 - tests
 
