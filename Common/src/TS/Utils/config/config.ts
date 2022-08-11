@@ -78,18 +78,6 @@ class CommonConfig {
 		if (protocol === "http://") ret += ":8090";
 		return ret;
 	}
-	public getConfigTimeStamp() {
-		const time = 0;
-		try {
-			const timeString = this.get("configLastUpdated");
-			const numero = stringToTimestamp(
-				timeString.replace("T", " ")
-			).getTime();
-			return numero;
-		} catch (e) {
-			return time;
-		}
-	}
 
 	//#endregion
 
