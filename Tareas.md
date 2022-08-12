@@ -15,6 +15,11 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 ## Estructura de archivos (orion/*)
 - Está desordenado: ordenar, decidir una lógica y un protocolo de donde va cada cosa. 
 
+## Migrar a uvu (orion)
+- https://www.npmjs.com/package/uvu
+- Borrar extensiones de jest
+- cambiar docs
+
 ## Logger (orion)
 
 - Integrar [pino](https://github.com/pinojs/pino) - mandar por rabbit/kafka
@@ -22,6 +27,8 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 - Plantear cual va a ser la estructura de los logs (AGG) -> Documentar en logger.ts
 - Preparar la implementación para integrar las alarmas
 - tests
+- comprimir con [snappy](https://www.npmjs.com/package/snappy)
+- casosUso stack????
 
 ## Alarmas
 - Plantear interfaz (se llamará por la clase logger)
