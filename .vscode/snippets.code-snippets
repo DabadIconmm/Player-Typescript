@@ -18,5 +18,29 @@
 	"node reject promise" : {
 		"body" : "if (err) reject(err);",
 		"prefix": "nodeReject",		
-	}
+	},
+	"log verbose" : {
+		"body" : "log('${1:msg}', NivelLog.verbose)",
+		"prefix": ["log1", "logv"]
+	},
+	"log debug" : {
+		"body" : "log('${1:msg}', NivelLog.debug)",
+		"prefix": ["log2", "logd"]
+	},
+	"log info" : {
+		"body" : "log('${1:msg}', NivelLog.info)",
+		"prefix": ["log3", "log"]
+	},
+	"log warn" : {
+		"body" : "log('${1:msg}', NivelLog.warn)",
+		"prefix": ["log4", "logw"]
+	},
+	"log error" : {
+		"body" : "log('${1:msg}', NivelLog.error)",
+		"prefix": ["log5", "loge"]
+	},
+	"log fatal" : {
+		"body" : "log('${1:msg}', NivelLog.fatal)",
+		"prefix": ["log6", "logf"]
+	},
 }

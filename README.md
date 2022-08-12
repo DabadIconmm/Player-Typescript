@@ -11,6 +11,9 @@ Para verlo en VSCode: `Control shift v`
 - ./run.sh init.
 - para hacer build ./run.sh build.
 
+# Snippets
+- en .vscode\snippets.code-snippets hay snippets utiles. Se pueden meter al gusto
+
 # Extensiones vscode
 se pueden instalar rapido con code --install-extension
 
