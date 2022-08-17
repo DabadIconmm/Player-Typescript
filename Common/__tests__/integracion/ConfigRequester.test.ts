@@ -1,18 +1,20 @@
 // TODO: Comprobar si se descargan bien por WCF y por WS Request
 
-import { cfg } from "../../src/TS/Utils/config/config";
-import { ConfigRequester } from "../../src/TS/Utils/config/ConfigRequester";
+import { cfg } from "../../src/TS/Utils/config/cfg";
+import { SettingRequester } from "../../src/TS/Utils/config/SettingsRequester";
 
-describe('ConfigRequester integracion', () => {
-    test('should reject (no PID)', async () => {
-        await cfg.reset().catch(()=>{})
-        expect(ConfigRequester.request()).rejects.toThrow;        
-    });
-    cfg.set("configPID", "abcd")
-    test('should reject (PID malo)', () => {
-        expect(ConfigRequester.request()).rejects.toThrow;        
-    });
-    // TODO test con un PID valido
+import { test, suite } from 'uvu';
+import * as assert from 'uvu/assert';
+import { type } from "jquery";
 
-
+const ConfigRequester = suite('ConfigRequester integracion')
+ConfigRequester('should reject (PID incorrecto)', async () => {      
+    try {
+        await SettingRequester.request("abcd")
+        assert.unreachable();
+    } catch (error) {
+        assert.instance(error, Error);
+    }
 });
+
+ConfigRequester.run()

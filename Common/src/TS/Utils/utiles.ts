@@ -1,5 +1,10 @@
+
 /* eslint-disable */
 // @ts-nocheck
+
+import { Funcionalidad, logFactory, NivelLog } from "./logger";
+
+const log = logFactory(Funcionalidad.utiles);
 
 export function formatearFecha(date: Date, pretty: boolean) {
 

@@ -1,24 +1,31 @@
 #!/bin/bash -e
 
-function build() {
-    lint 
-    tsc -noEmit
-    esbuild Common/src/TS/DI.ts --bundle --minify --outfile=out.js --platform=node --sourcemap
-    test
+function debugBuild(){
+    npx esbuild Common/src/TS/ --minify --outdir=build/ --platform=node --sourcemap
 }
 
+function buildRelease() {
+    lint
+    tsc -noEmit
+    fastBuild
+    test
+}
+function lintbuild(){
+    lint
+    build
+}
 function init() {
     npm install -g pnpm 
-    npm install -g esbuild 
+    npm install esbuild 
     pnpm install 
     pnpm setup 
 
 }
 function lint() {
-    npx eslint . --fix
+    npx eslint --fix
 }
 function test(){
-    npx jest
+    
+    npx uvu
 }
-
-build
+debugBuild

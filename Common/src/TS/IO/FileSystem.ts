@@ -1,10 +1,7 @@
-import { logExport } from "../Utils/logger";
-import { encodings } from "../Utils/comun";
-import { CasosUso, NivelLog } from "../Utils/logger";
+import { encodings } from "../Utils/types";
+import { Funcionalidad, logFactory, NivelLog } from "../Utils/logger";
 
-function log(str: string, verbosity?: NivelLog){
-	logExport(str, CasosUso.fileSystem, verbosity )
-}
+const log = logFactory(Funcionalidad.utiles);
 
 
 type FileOpts = encodings | null; 

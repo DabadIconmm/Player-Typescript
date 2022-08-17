@@ -1,11 +1,9 @@
-import { ConfigRequester } from "./ConfigRequester";
+import { SettingRequester } from "./SettingsRequester";
 import { fs } from "../../IO/FileSystem";
-import { CasosUso, logExport, NivelLog } from "./../logger";
 import { config, IConfig } from "./interfaces";
-import { stringToTimestamp } from "../utiles";
-function log(str: string, verbosity?: NivelLog){
-	logExport(str, CasosUso.network, verbosity )
-}
+import { Funcionalidad, logFactory, NivelLog } from "../logger";
+import { PID } from "../types";
+const log = logFactory(Funcionalidad.settings);
 
 const settings = {
 	PL_KEY: "pl",
@@ -16,12 +14,12 @@ const settings = {
 };
 
 class CommonConfig {
-	protected settings: config = {};
+	protected settings: config = {}; // Se inicializa en cfg.cargar()
 	protected internal: config = {};
 
 	//#region getters
 	private setDefault<T extends number | string | boolean | undefined>(
-		nombre: string, 
+		nombre: string,
 		valor: T
 	) {
 		if (valor === undefined)
@@ -29,7 +27,9 @@ class CommonConfig {
 				`Setting ${nombre} no encontrado y no hay valor por defecto.`
 			);
 		this.settings[nombre] = valor.toString();
-		log(`config.get. Devolvemos el valor por defecto para ${nombre}: ${valor}`);
+		log(
+			`config.get. Devolvemos el valor por defecto para ${nombre}: ${valor}`
+		);
 	}
 	public get(nombre: string, defecto?: string): string {
 		const ret = this.settings[nombre] ?? this.internal[nombre];
@@ -45,13 +45,13 @@ class CommonConfig {
 	public getBool(nombre: string, defecto?: boolean): boolean {
 		// Esta funcion está plagada de trampas, cosas de javascript. Ojito cambiandola.
 		const str: string = this.settings[nombre] ?? this.internal[nombre];
-		if (str !== undefined){
-			const lower = str.toLowerCase()
+		if (str !== undefined) {
+			const lower = str.toLowerCase();
 			if (lower === "true" || str === "1") return true;
 			if (lower === "false" || str === "0") return false;
 			throw new Error("El valor no es booleano, era " + str);
 		}
-		
+
 		this.setDefault(nombre, defecto);
 		return defecto!;
 	}
@@ -59,7 +59,8 @@ class CommonConfig {
 		const str: string = this.settings[nombre] ?? this.internal[nombre];
 		if (str !== undefined) {
 			const ret = Number(str);
-			if (isNaN(ret)) throw new Error("El valor no es un numero, era " + str);
+			if (isNaN(ret))
+				throw new Error("El valor no es un numero, era " + str);
 			return ret;
 		}
 
@@ -68,7 +69,8 @@ class CommonConfig {
 	}
 
 	//TODO estas roñas quitarlas de aqui y meterlas en las clases que las necesitan
-	public getDefaultWcfServerAddress() { // Deberia ir en alguna clase de conexion al servidor
+	public getDefaultWcfServerAddress() {
+		// Deberia ir en alguna clase de conexion al servidor
 		const protocol = this.get("protocolServer", "http://");
 		// let ret = protocol + this.get("IPMaster", Dnv.deviceInfo.ipServer()); //TODO
 		let ret = protocol + this.get("IPMaster", "acceso.denevacuatro.com");
@@ -81,10 +83,28 @@ class CommonConfig {
 	public set(nombre: string, value: string) {
 		this.internal[nombre] = value;
 	}
+
+	/*
+	Pongo esto aqui en lugar de en configNode	
+	porque asumo que window.localStorage esta en
+	todas las plataformas
+	*/
+	public get QRConfigurado(): boolean {
+		return window.localStorage.getItem("configurado") === "true";
+	}
+
+	public set QRConfigurado(value: boolean) {
+		window.localStorage.setItem("configurado", value ? "true" : "false");
+	}
 }
 
 class ConfigNode extends CommonConfig implements IConfig {
-	public async cargar(): Promise<void> {
+	public async cargar(PlayerID?: PID): Promise<void> {
+		/*
+		1. Intenta cargar de disco y de localstorage
+			Por qué se carga de disco? En qué casos localstorage no funciona?
+		2. Si no lo encuentra lo pide al servidor (necesita el PlayerID)
+		*/
 		log("Comenzando carga de settings");
 
 		try {
@@ -102,49 +122,32 @@ class ConfigNode extends CommonConfig implements IConfig {
 			)
 				this.settings = local;
 			else this.settings = disk;
-
-			window.dispatchEvent(
-				new CustomEvent(ConfigRequester.CFG_CARGADA_EVENT, {
-					detail: {},
-				})
-			);
-			return;
 		} catch (error) {
 			log(
-				"no se pudo cargar los settings" + JSON.stringify(error),
-				NivelLog.error
-			);
-			// Si no podemos cargar de disco
-			//(quizas no se ha configurado por primera vez)
-			log(
-				"Error cargando config de disco, fallback llamada al servidor",
+				`no se pudo cargar los settings del disco: ${error}, se intentará pedirlos al servidor`,
 				NivelLog.warn
 			);
-			try {
-				const config = await ConfigRequester.request();
+			if (!PlayerID) throw new Error("no hay PlayerID")	
+			const config = await SettingRequester.request(PlayerID);
 
-				if (config !== null) {
-					this.settings = config;
-					this.backup().catch((err) =>
-						log(
-							`No se pudo guardar en disco: ${err}`,
-							NivelLog.error
-						)
-					);
-					window.dispatchEvent(
-						new CustomEvent(ConfigRequester.CFG_CARGADA_EVENT, {
-							detail: {},
-						})
-					);
-				}
-			} catch (error) {
-				log(
-					`ERROR: No se pudo cargar la configuracion del disco ni del servidor.
-						${error}`,
-					NivelLog.fatal
+			if (config === null)
+				throw new Error(
+					"La respuesta del servidor ha sido que no hay cambios"
 				);
+
+			this.settings = config;
+			try {
+				this.backup();
+			} catch (error) {
+				log(`No se pudo guardar en disco: ${error}`, NivelLog.error);
 			}
 		}
+		window.dispatchEvent(
+			// TODO esto deberia ir en el init pipeline, esto es una guarrada
+			new CustomEvent("CFG_CARGADA_EVENT", {
+				detail: {},
+			})
+		);
 	}
 	public async backup(): Promise<void> {
 		async function saveToDisk(cfg: string, ruta: string) {
@@ -184,4 +187,4 @@ class ConfigNode extends CommonConfig implements IConfig {
 	}
 }
 
-export const cfg = new ConfigNode
+export const cfg = new ConfigNode();

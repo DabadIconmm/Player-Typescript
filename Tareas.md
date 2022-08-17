@@ -11,7 +11,9 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 - arreglar [utiles.ts](Common\src\TS\Utils\utiles.ts) 
 - [utiles.js](Common\src\lib\utiles.js) y Dnv.helpers
 - tests 
-
+## DeviceProperties (daniel)
+- Common\lib\deviceProperties.js
+- 
 ## Estructura de archivos (orion/*)
 - Está desordenado: ordenar, decidir una lógica y un protocolo de donde va cada cosa. 
 
@@ -29,6 +31,8 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 - tests
 - comprimir con [snappy](https://www.npmjs.com/package/snappy)
 - casosUso stack????
+
+
 
 ## Alarmas
 - Plantear interfaz (se llamará por la clase logger)

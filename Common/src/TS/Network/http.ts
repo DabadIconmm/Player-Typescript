@@ -1,12 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { logExport } from "../Utils/logger";
-import { CasosUso, NivelLog } from "../Utils/logger";
 import { debeLoguearFallosDeRed } from "./servidor";
+import { Funcionalidad, logFactory, NivelLog } from "../Utils/logger";
 
-function log(str: string, verbosity?: NivelLog){
-	logExport(str, CasosUso.network, verbosity )
-}
-
+const log = logFactory(Funcionalidad.utiles);
 type Responses = ArrayBuffer | Document | Blob | JSON | string;
 type config = {
 	data?: unknown;

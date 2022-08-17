@@ -1,42 +1,33 @@
 {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended"
+  ],
+  "rules": {
+    "prefer-const": "error",
+    "no-var": "warn",
+    "eqeqeq": [
+      "warn",
+      "always"
     ],
-    "extends": [
-      "eslint:recommended"
+    "brace-style": [
+      "warn",
+      "1tbs"
     ],
-    "rules": {
-        "prefer-const":"error",
-        "no-var": "warn",
-        "eqeqeq":["warn", "always"],
-        "brace-style": ["warn", "1tbs"],
-        "no-else-return":"error",
-        "prefer-arrow-callback": "warn",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "no-unused-vars": "off",
-        "no-undef": "off",
-        "no-mixed-spaces-and-tabs": "off"
-
-
-
-        
-    },
-    "overrides": [
-        {
-          "files": ["assembly/**"],
-          "parserOptions": {
-            "project": "assembly/tsconfig.json"
-          },
-          "rules": {
-            // Type conversions require an explicit cast in AssemblyScript.
-            "@typescript-eslint/no-unnecessary-type-assertion": "off",
-    
-            // Different behavior in AssemblyScript.
-            // https://www.assemblyscript.org/basics.html#triple-equals
-            "eqeqeq": "off"
-          }
-        }
-      ]
+    "no-else-return": "error",
+    "prefer-arrow-callback": "warn",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "no-unused-vars": "off",
+    "no-undef": "off",
+    "no-mixed-spaces-and-tabs": "off"
+  },
+  "overrides": [{
+    "files": ["**/*.ts", "**/*.tsx"]
   }
+  ]
+
+}

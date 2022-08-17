@@ -1,7 +1,9 @@
 
-export class SystemInfo { //TODO DI
+export class SystemInfo { //TODO
 	public static setEstadoConectividadConfiguracion(a: string){
-		a;
+		return;
+	}
+	public static setEstadoConectividadPid(a: string){
 		return;
 	}
 }

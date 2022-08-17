@@ -1,24 +1,25 @@
 {
-	// Place your Deneva.UI.PlayerHTML5-Typescript workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
-	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
-	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
-	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
-	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
-	// Placeholders with the same ids are connected.
-	// Example:
-	// "Print to console": {
-	// 	"scope": "javascript,typescript",
-	// 	"prefix": "log",
-	// 	"body": [
-	// 		"console.log('$1');",
-	// 		"$2"
-	// 	],
-	// 	"description": "Log output to console"
-	// }
-	"node reject promise" : {
-		"body" : "if (err) reject(err);",
-		"prefix": "nodeReject",		
+	// General
+	"trycatch": {
+		"body" : [
+"try {",
+"    ",
+"} catch (e) {",
+"    const error = <Error>e;",
+"}"
+],
+		"prefix": "try"
 	},
+	// uvu
+	"uvu suite": {
+		"body" : "suite('${1:nombre}', () => {\n\ttest('${2:deberia}', () =>{\n\n\t})\n});",
+		"prefix": "suite"
+	},
+	"uvu test": {
+		"body": "test('${2:deberia}', () =>{\n\t\n})",
+		"prefix": ["test", "utest"]
+	},
+	// LOGGERS
 	"log verbose" : {
 		"body" : "log('${1:msg}', NivelLog.verbose)",
 		"prefix": ["log1", "logv"]
@@ -44,3 +45,24 @@
 		"prefix": ["log6", "logf"]
 	},
 }
+
+
+
+
+
+// Place your Deneva.UI.PlayerHTML5-Typescript workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }

@@ -1,35 +1,31 @@
-import { ObjectID, PID } from "./../comun";
+import { ConfigID, EID, ObjectID, PID } from "../types";
 import { config } from "./interfaces";
 
 // # IFDEF NODE
 // import CryptoJS = require("crypto-js");
+// # ENDIF
 import * as CryptoJS from "crypto-js"
 import { debeLoguearFallosDeRed } from "../../Network/servidor";
 import { SystemInfo } from "../../SystemInfo/systemInfo";
 import { formatearFecha, formatearFechaUTCDia } from "../utiles";
 import { http, HTTPError } from "../../Network/http";
-import { cfg } from "./config";
+import { cfg } from "./cfg";
 import { stringToTimestamp } from "../utiles";
 
-import { CasosUso, logExport, NivelLog } from "./../logger";
-// # ENDIF
+import { Funcionalidad, logFactory, NivelLog } from "../logger";
 
-function log(str: string, verbosity?: NivelLog){
-	logExport(str, CasosUso.settings, verbosity )
-}
-
+const log = logFactory(Funcionalidad.settings);
 
 type configResponse = { doc: Document | null; timestamp?: string };
-export class ConfigRequester {
+export class SettingRequester {
 	private static defaultWsBaseUrl: string | null = null; // TODO hacer setting de esto
 	public static urlWebCfgServiceInicial: string | undefined; // TODO hacer setting de esto
-	public static CFG_CARGADA_EVENT = "CFG_CARGADA_EVENT";
 
 	private static errHandler(e: string) {
 		if (debeLoguearFallosDeRed()) {
 			// TODO cambiar al config?
 			log(
-				"[SERVIDOR] Error al pedir configuracion: " + e,
+				"Error al pedir configuracion: " + e,
 				
 				NivelLog.error
 			);
@@ -37,8 +33,8 @@ export class ConfigRequester {
 		SystemInfo.setEstadoConectividadConfiguracion("Error");
 	}
 
-	public static async request(): Promise<config | null> {
-		async function pedirConfigAlServidor(id: PID): Promise<configResponse> {
+	public static async request(PlayerID: PID): Promise<config | null> {
+		async function pedirConfigAlServidor(PlayerID: PID): Promise<configResponse> {
 			const response: configResponse = await (cfg.getBool(
 				"Manager_WebRequest_Enabled",
 				false
@@ -57,7 +53,8 @@ export class ConfigRequester {
 			);
 			return response;
 
-			async function WS_DenevaRequest() {
+			async function WS_DenevaRequest() { 
+				// REST
 				let url: string;
 				const urlCfg = cfg.get("URLConfigMaster", "");
 				if (urlCfg) {
@@ -77,7 +74,7 @@ export class ConfigRequester {
 
 				const objId = cfg.getInt("MyOwnCode", 0);
 
-				const token = CryptoJS.SHA256(id + ";" + formatearFechaUTCDia(new Date())).toString(
+				const token = CryptoJS.SHA256(PlayerID + ";" + formatearFechaUTCDia(new Date())).toString(
 					CryptoJS.enc.Hex
 				);
 
@@ -95,11 +92,11 @@ export class ConfigRequester {
 
 				if (!objId)
 					throw new Error(
-						"[SERVIDOR] ObjectID no válido, no podemos pedir config a WSRequest."
+						"ObjectID no válido, no podemos pedir config a WSRequest."
 					);
 
 				const headers = {
-					"X-Pid": id,
+					"X-Pid": PlayerID,
 					"X-Token": token,
 					"If-Modified-Since": fechaHTTP,
 				};
@@ -118,7 +115,7 @@ export class ConfigRequester {
 
 			async function WCF_Request() {
 				const urlFallback =
-					ConfigRequester.urlWebCfgServiceInicial ??
+					SettingRequester.urlWebCfgServiceInicial ??
 					cfg.getDefaultWcfServerAddress() + "/Servicios/WebConfig";
 
 				const url =
@@ -131,14 +128,13 @@ export class ConfigRequester {
 					NivelLog.verbose
 				);
 				log("url " + url,  NivelLog.debug);
-				if (!id) {
+				if (!PlayerID) {
 					throw new Error(
-						"[SERVIDOR] No pedimos configuración, PID =" + id
-					);
+						"No pedimos configuración, PID no válido");
 				}
 
 				const xml = `<GetConfiguracion xmlns="http://tempuri.org/">\
-                        <ID>${id}</ID><byObjId>false</byObjId>\
+                        <ID>${PlayerID}</ID><byObjId>false</byObjId>\
                         <lastConfigTimestamp>${cfg.get(
 							"configLastUpdated",
 							"1900-01-01 00:00:00"
@@ -167,17 +163,17 @@ export class ConfigRequester {
 			eid: number
 		): Promise<string> {
 			log(
-				"[SERVIDOR] Pedimos url de configuración inicial, PID = " + pid,
+				"Pedimos url de configuración inicial, PID = " + pid,
 				
 				NivelLog.info
 			);
 
-			ConfigRequester.defaultWsBaseUrl =
-				ConfigRequester.defaultWsBaseUrl ??
+			SettingRequester.defaultWsBaseUrl =
+				SettingRequester.defaultWsBaseUrl ??
 				cfg.get("protocolServer", "http://") + cfg.get("ipServer");
 
 			const url =
-				ConfigRequester.defaultWsBaseUrl +
+				SettingRequester.defaultWsBaseUrl +
 				"/WSResources/RemoteResources.asmx/GetMetadatoDispoPadre?EID=" +
 				eid +
 				"&PID=" +
@@ -231,7 +227,7 @@ export class ConfigRequester {
 					)
 				) {
 					log(
-						"[SERVIDOR] El servidor no implementa el método para la url inicial, usamos el por defecto..." +
+						"El servidor no implementa el método para la url inicial, usamos el por defecto..." +
 							e,
 						
 						NivelLog.error
@@ -241,7 +237,7 @@ export class ConfigRequester {
 						"/Servicios/WebConfig"
 					);
 				}
-				ConfigRequester.errHandler(e.toString());
+				SettingRequester.errHandler(e.toString());
 				throw new Error("Error pidiendo la url de configuracion.");
 			}
 		}
@@ -336,8 +332,7 @@ export class ConfigRequester {
 			);
 		}
 
-		const pid: PID = cfg.get("configPID", undefined);
-		if (pid === undefined) {
+		if (PlayerID === undefined) {
 			log(
 				"No tenemos PID ¿Es la primera vez que arrancamos?",
 				
@@ -364,11 +359,11 @@ export class ConfigRequester {
 			cfg.getBool("configurado", false) &&
 			cfg.getInt("MyOwnCode", 0) !== 0
 		) {
-			if (!pid)
-				throw new Error("No estamos configurados y no tenemos PID");
+			if (!PlayerID)
+				throw new Error("No estamos configurados y no tenemos objectID");
 
-			ConfigRequester.urlWebCfgServiceInicial = 
-				await inicializarUrlCfg(pid, cfg.getInt("configEID", 0));
+			SettingRequester.urlWebCfgServiceInicial = 
+				await inicializarUrlCfg(PlayerID, cfg.getInt("configEID", 0));
 		}
 
 		/*
@@ -376,7 +371,7 @@ export class ConfigRequester {
 		 */
 
 		try {
-			const config = await pedirConfigAlServidor(pid);
+			const config = await pedirConfigAlServidor(PlayerID);
 			return parseConfigXML(config.doc, config.timestamp);
 		} catch (error) {
 			const e = <Error>error;
@@ -384,5 +379,61 @@ export class ConfigRequester {
 			e.message = "Error pidiendo configuracion: " + e.message
 			throw e;
 		}
+	}
+	public static async getPID(ConfigID: ConfigID): Promise<{pid: PID, eid: EID}> {
+		try {
+			const url = cfg.get("protocolServer", "http://") +
+			cfg.get("IPMaster", cfg.get("ipServer")) +
+			"/WSResources/RemoteResources.asmx" + 
+			"/GetPIDByIDPlayerJS?IDPlayer=" + 
+			ConfigID +
+			"&r=" + new Date().getTime().toString();
+	
+			const resp = (await http.get(url)).data.toString();
+			$("#divInfo").fadeOut(1000);
+	
+			const res = resp.split("[]");
+			
+			
+			if (res.length > 1 && res[0] !== "ERROR") {
+				cfg.QRConfigurado = true;
+				const ret = { pid: res[0], eid: parseInt(res[1])};
+				log(ret.toString(), NivelLog.debug);
+				return ret
+			}
+			throw new Error("La respuesta del servidor fue incorrecta: " + resp);
+
+
+		} catch (error) {
+			SystemInfo.setEstadoConectividadPid("Error");
+			throw error;
+		}
+	}
+	
+	public static async getConfigID(): Promise<{
+		configID: ConfigID;
+		url: string;
+		validez: Date;
+	}> {
+		const url = // TODO la cfg no esta cargada aun esto va a fallar. Obtener del /config.ini
+		// TODO cfg para llamadas rest
+			cfg.get("protocolServer", "http://") +
+			cfg.get("IPMaster", cfg.get("ipServer")) +
+			"/GetIDPlayerJS?IdPlayer=&r=" + // TODO probar sin fecha
+			new Date().getMilliseconds().toString();
+		const resp = (await http.get(url)).data.toString(); 
+			
+	
+		const res = resp.split("[]");
+		if (res.length < 3 || res[0] === "ERROR")
+			throw new Error("Se recibio un error de GetIDPlayerJS: " + res);
+
+
+		document.getElementById("codeText")!.innerHTML = res[0];
+		return {
+			configID: res[0],
+			validez: stringToTimestamp(res[1]),
+			url: res[2],
+		};
 	}
 }

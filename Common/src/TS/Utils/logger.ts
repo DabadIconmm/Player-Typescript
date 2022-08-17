@@ -1,4 +1,4 @@
-export enum CasosUso {
+export enum Funcionalidad {
     calendarios,
     alarmas,
     audiencia,
@@ -7,7 +7,9 @@ export enum CasosUso {
     playlist,
     settings,
     fileSystem,
-    network
+    network,
+    utiles,
+    init
 }
 export enum NivelLog {
     verbose = 0,
@@ -19,14 +21,14 @@ export enum NivelLog {
 }
 
 interface ILogger{ 
-    log(msg: string, casos: CasosUso | string, nivel: NivelLog): void;
+    log(msg: string, casos: Funcionalidad | string, nivel: NivelLog): void;
 }
 
 // TODO usar pino (para node)
 
 const verbosity: NivelLog = NivelLog.debug;
 class ConsoleLogger implements ILogger{ // Console logger
-	public log(msg: string, caso: CasosUso | string, nivel: NivelLog = NivelLog.info){
+	public log(msg: string, caso: Funcionalidad | string, nivel: NivelLog = NivelLog.info){
 		if (nivel < verbosity) return;
         
 		switch (nivel) {
@@ -38,10 +40,12 @@ class ConsoleLogger implements ILogger{ // Console logger
 		}
 	}
     constructor(){
-        this.log("log activado", CasosUso.alarmas)
+        this.log("log activado", Funcionalidad.alarmas)
     }
 }
-
-// Ver ejemplos de uso si se va a hacer un archivo nuevo. 
-// TODO: Hay una mejor manera?
-export const logExport = new ConsoleLogger().log; 
+const log = new ConsoleLogger().log; // Default 
+export function logFactory(funcionalidad: Funcionalidad){
+    return (msg: string, nivel: NivelLog = NivelLog.info)=>{
+        log(msg, funcionalidad, nivel)
+    }
+}
