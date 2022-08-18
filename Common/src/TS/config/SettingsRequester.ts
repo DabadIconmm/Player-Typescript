@@ -296,7 +296,7 @@ export class SettingRequester {
 			if (!PlayerID)
 				throw new Error("No estamos configurados y no tenemos objectID");
 
-			SettingRequester.urlWebCfgServiceInicial = 
+			network.UrlCfg = 
 				await inicializarUrlCfg(PlayerID, cfg.getInt("configEID", 0));
 		}
 

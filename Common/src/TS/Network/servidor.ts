@@ -19,7 +19,7 @@ class Network {
 		return this.urlServidor;
 	}
 	
-	
+	public UrlCfg: string = "";
 	public endpoints = {
 		getConfigID(PlayerID: PID = ""){
 			return `${network.urlServidor}/WSResources/RemoteResources.asmx/GetIDPlayerJS?IdPlayer=&r=${PlayerID}`
