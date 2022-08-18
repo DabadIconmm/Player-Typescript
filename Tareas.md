@@ -5,6 +5,7 @@ Cada vez que se haga una funcionalidad nueva hay que:
 1. Poner el caso de uso en CasosUso (en el archivo logger), crear función log con logFactory()
 2. Plantear la interfaz: Cuanto mas pequeña mejor
 3. Hacer pruebas unitarias **solo contra la interfaz, nunca contra la implementación**. Eso es porque si se cambia la implementación un test nunca debería de fallar.
+4. Ver si tiene que estar en un namespace
 
 El codigo JavaScript esta en el tfs en soluciones/PlayerHTML5-Unificado
 

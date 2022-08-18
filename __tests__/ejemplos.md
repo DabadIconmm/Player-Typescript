@@ -1,6 +1,8 @@
 
 ## sync throw
+
 No se puede llamar a la funcion directamente si tiene parametros porque eso probaria el valor de respuesta:
+
 ```JavaScript
 assert.throws(()=>foo(abc)); //Valido
 assert.throws(foo); //Valido
