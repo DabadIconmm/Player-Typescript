@@ -1,6 +1,4 @@
 
-/* eslint-disable */
-// @ts-nocheck
 
 import { Funcionalidad, logFactory, NivelLog } from "./logger";
 
@@ -49,8 +47,8 @@ export function stringToTimestamp(fecha) {
     fecha = fecha.replace("/", "-");
     fecha = fecha.replace("/", "-");
 
-    var dias = fecha.split(" ")[0].split("-");
-    var horas = fecha.split(" ")[1].split(":");
+    const dias = fecha.split(" ")[0].split("-");
+    const horas = fecha.split(" ")[1].split(":");
 
     for (var i = 0; i < dias.length - 1; i++) {
         if (dias[i].length == 1) dias[i] = "0" + dias[i];
@@ -72,10 +70,10 @@ export function stringToTimestamp(fecha) {
 
 
     var dateArray;
-    var reggie = /(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
+    const reggie = /(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
     var dateArray = reggie.exec(fecha);
 
-    var dateObject = new Date(
+    const dateObject = new Date(
     dateArray[3],
     dateArray[2] - 1, // Careful, month starts at 0!
     dateArray[1],
@@ -85,4 +83,23 @@ export function stringToTimestamp(fecha) {
 );
 
     return dateObject;
+}
+
+function calcularInfoHash() {
+    //piecesHashes.push(hasher.hex().toUpperCase());
+    piecesHashes.push(hasher.arrayBuffer());
+    hasher = sha1.create();
+    const filenamebytes = stringToBytes(filename);
+    // Un hash SHA1 son 160 bits
+    let debug = "";
+    hasher.update("d6:lengthi" + size + "e4:name" + filenamebytes.length + ":" + filename + "12:piece lengthi" + infoHashPieceLength + "e6:pieces" + (pieces * 160 / 8) + ":");
+    debug = "d6:lengthi" + size + "e4:name" + filenamebytes.length + ":" + filename + "12:piece lengthi" + infoHashPieceLength + "e6:pieces" + (pieces * 160 / 8) + ":";
+
+    for (let i = 0; i < piecesHashes.length; i++) {
+        hasher.update(piecesHashes[i]);
+        debug += bytesToString(piecesHashes[i]);
+    }
+    hasher.update("7:privatei0e9:publisher15:www.deneva.infoe");
+    debug += "7:privatei0e9:publisher15:www.deneva.infoe";
+    return hasher.hex().toUpperCase();
 }

@@ -6,6 +6,8 @@ Cada vez que se haga una funcionalidad nueva hay que:
 2. Plantear la interfaz: Cuanto mas pequeña mejor
 3. Hacer pruebas unitarias **solo contra la interfaz, nunca contra la implementación**. Eso es porque si se cambia la implementación un test nunca debería de fallar.
 
+El codigo JavaScript esta en el tfs en soluciones/PlayerHTML5-Unificado
+
 ## Utiles (daniel)
 
 Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto para ir aprendiendo ts
