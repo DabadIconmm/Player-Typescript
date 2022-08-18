@@ -139,7 +139,7 @@ export class SettingRequester {
 					NivelLog.debug
 				);
 				// TODO puedo hacer esto sin parsearlo antes?
-				const doc = XMLDocument(res.data); 
+				const doc = <Document> res.data; 
 				const response = doc.documentElement.textContent;
 				if (
 					!response ||
