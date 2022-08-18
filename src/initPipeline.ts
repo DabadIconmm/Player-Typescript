@@ -10,9 +10,9 @@
 - logs
 */
 
-import { cfg } from "./config/cfg";
-import { QRconfigure } from "./config/QRconfig";
-import { SettingRequester } from "./config/SettingsRequester";
+import { cfg } from "./Config/cfg";
+import { QRconfigure } from "./Config/QRconfig";
+import { SettingRequester } from "./Config/SettingsRequester";
 import { NivelLog, logFactory, Funcionalidad } from "./Utils/logger";
 const log = logFactory(Funcionalidad.init)
 export async function init(){

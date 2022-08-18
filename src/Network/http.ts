@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { debeLoguearFallosDeRed } from "./servidor";
 import { Funcionalidad, logFactory, NivelLog } from "../Utils/logger";
-import { cfg } from "../config/cfg";
+import { cfg } from "../Config/cfg";
 
 const log = logFactory(Funcionalidad.network);
 type Responses = ArrayBuffer | Document | Blob | JSON | string;

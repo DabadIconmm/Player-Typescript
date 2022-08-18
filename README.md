@@ -18,8 +18,8 @@ Las tareas estan en [Tareas.md](./Tareas.md)
 ## Init
 
 - Es una chapuza de momento, tengo que cambiarlo, probablemente a scripts de npm?. De momento ejecutar con git bash:
-- ./run.sh init.
-- para hacer build ./run.sh build.
+- en ./run.sh init.
+- para hacer build en ./run.sh build.
 
 ## Snippets
 

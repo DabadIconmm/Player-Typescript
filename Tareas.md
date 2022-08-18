@@ -2,8 +2,8 @@
 
 Cada vez que se haga una funcionalidad nueva hay que:
 
-1. Poner el caso de uso en CasosUso (en el archivo logger)
-2. Plantear la interfaz
+1. Poner el caso de uso en CasosUso (en el archivo logger), crear función log con logFactory()
+2. Plantear la interfaz: Cuanto mas pequeña mejor
 3. Hacer pruebas unitarias **solo contra la interfaz, nunca contra la implementación**. Eso es porque si se cambia la implementación un test nunca debería de fallar.
 
 ## Utiles (daniel)
@@ -11,8 +11,8 @@ Cada vez que se haga una funcionalidad nueva hay que:
 Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto para ir aprendiendo ts
 
 - No es necesaria una interfaz para esto pero se puede hacer
-- arreglar [utiles.ts](Common\src\TS\Utils\utiles.ts)
-- [utiles.js](Common\src\lib\utiles.js) y Dnv.helpers
+- arreglar [utiles.ts](src\Utils\utiles.ts)
+- utiles.js: Common\src\lib\utiles.js y Dnv.helpers
 - tests
 
 ## DeviceProperties (daniel)
@@ -30,8 +30,8 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 - Plantear cual va a ser la estructura de los logs (AGG) -> Documentar en logger.ts
 - Preparar la implementación para integrar las alarmas
 - tests
-- comprimir con [snappy](https://www.npmjs.com/package/snappy)
-- casosUso stack????
+- comprimir con [snappy](https://www.npmjs.com/package/snappy)?
+- casosUso stack???? -> no se va a hacer
 
 ## Alarmas
 

@@ -1,6 +1,6 @@
 // TODO: Comprobar si se descargan bien por WCF y por WS Request
 
-import { SettingRequester } from "../../src/config/SettingsRequester";
+import { SettingRequester } from "../../src/Config/SettingsRequester";
 
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
