@@ -19,10 +19,6 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 
 - Common\lib\deviceProperties.js
 
-## Estructura de archivos (orion/*)
-
-- Está desordenado: ordenar, decidir una lógica y un protocolo de donde va cada cosa. 
-
 ## Logger (orion)
 
 - Integrar [pino](https://github.com/pinojs/pino) - mandar por rabbit/kafka
