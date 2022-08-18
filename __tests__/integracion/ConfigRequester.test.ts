@@ -1,10 +1,9 @@
 // TODO: Comprobar si se descargan bien por WCF y por WS Request
 
-import { SettingRequester } from "../../src/TS/config/SettingsRequester";
+import { SettingRequester } from "../../src/config/SettingsRequester";
 
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { cfg } from "../../src/TS/config/cfg";
 
 const ConfigRequester = suite('ConfigRequester integracion')
 ConfigRequester.before(async ()=>{

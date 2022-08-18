@@ -33,6 +33,5 @@ cmstead.js-codeformer
 cmstead.jsrefactor
 DavidAnson.vscode-markdownlint
 dbaeumer.vscode-eslintl
-Wscats.eno
 xabikos.JavaScriptSnippets
 yzhang.markdown-all-in-one

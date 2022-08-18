@@ -8,5 +8,5 @@
         "module": "CommonJS",
         "esModuleInterop": true
     },
-    "exclude": ["Common/src/TS/Calendarios/**/*", "Common/src/TS/Playlist/**/*", "src/node_modules"]
+    "exclude": ["src/Calendarios/**/*", "Common/src/TS/Playlist/**/*", "src/node_modules"]
 }

@@ -58,3 +58,7 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 ## Build (orion)
 
 - Arreglarla, no puede estar en bash si todo el mundo usa windows
+
+## CI (orion)
+
+- Crear una pipeline con jenkins o lo que sea

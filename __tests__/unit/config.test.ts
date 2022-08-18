@@ -1,9 +1,9 @@
 //TODO comprobar si funciona cada getter
 
-import { cfg } from "../../src/TS/config/cfg";
+import { cfg } from "../../src/config/cfg";
 import { test, suite } from "uvu";
 import * as assert from "uvu/assert";
-import { SettingRequester } from "../../src/TS/config/SettingsRequester";
+import { SettingRequester } from "../../src/config/SettingsRequester";
 
 //#region config
 const config = suite('cfg');
