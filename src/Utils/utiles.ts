@@ -1,4 +1,6 @@
 
+/* eslint-disable */
+// @ts-nocheck
 
 import { Funcionalidad, logFactory, NivelLog } from "./logger";
 
