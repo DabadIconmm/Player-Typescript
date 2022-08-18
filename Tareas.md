@@ -1,26 +1,27 @@
 # Tareas
-Cada vez que se haga una funcionalidad nueva hay que
+
+Cada vez que se haga una funcionalidad nueva hay que:
+
 1. Poner el caso de uso en CasosUso (en el archivo logger)
 2. Plantear la interfaz
 3. Hacer pruebas unitarias **solo contra la interfaz, nunca contra la implementación**. Eso es porque si se cambia la implementación un test nunca debería de fallar.
 
-
 ## Utiles (daniel)
-Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto para ir aprendiendo ts
-- No es necesaria una interfaz para esto pero se puede hacer
-- arreglar [utiles.ts](Common\src\TS\Utils\utiles.ts) 
-- [utiles.js](Common\src\lib\utiles.js) y Dnv.helpers
-- tests 
-## DeviceProperties (daniel)
-- Common\lib\deviceProperties.js
-- 
-## Estructura de archivos (orion/*)
-- Está desordenado: ordenar, decidir una lógica y un protocolo de donde va cada cosa. 
 
-## Migrar a uvu (orion)
-- https://www.npmjs.com/package/uvu
-- Borrar extensiones de jest
-- cambiar docs
+Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto para ir aprendiendo ts
+
+- No es necesaria una interfaz para esto pero se puede hacer
+- arreglar [utiles.ts](Common\src\TS\Utils\utiles.ts)
+- [utiles.js](Common\src\lib\utiles.js) y Dnv.helpers
+- tests
+
+## DeviceProperties (daniel)
+
+- Common\lib\deviceProperties.js
+
+## Estructura de archivos (orion/*)
+
+- Está desordenado: ordenar, decidir una lógica y un protocolo de donde va cada cosa. 
 
 ## Logger (orion)
 
@@ -32,15 +33,15 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 - comprimir con [snappy](https://www.npmjs.com/package/snappy)
 - casosUso stack????
 
-
-
 ## Alarmas
+
 - Plantear interfaz (se llamará por la clase logger)
 - Extraer todo lo posible al worker thread
 - Implementar
 - Tests (con mocks)
 
 ## Init pipeline
+
 - Sigue el principio de [Chain of Responsibility](https://sourcemaking.com/design_patterns/chain_of_responsibility)
 - Añadir al TODO
 - Implementar lo que se pueda
@@ -50,8 +51,10 @@ Esto lo pueden hacer varias personas a la vez. Lo ideal sería empezar por esto 
 - [Compilación condicional](https://www.npmjs.com/package/esbuild-ifdef) y diferentes archivos para funciones de cada plataforma.
 
 ## VSCode (*)
+
 - Crear una configuración del Prettier ([Documentación](https://prettier.io/docs/en/options.html))
     [e intergarlo con ESLint](https://prettier.io/docs/en/integrating-with-linters.html)
 
 ## Build (orion)
-- Arreglarla, no puede estar en bash si todo el mundo usa windows.
+
+- Arreglarla, no puede estar en bash si todo el mundo usa windows
