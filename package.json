@@ -83,8 +83,8 @@
     "cleanTs": "tsc --build --clean LG/ && tsc --build --clean electron/ && tsc --build --clean Tizen/",
     "release": "npm run lint && tsc -noEmit && esbuild Common/src/TS/initPipeline.ts --bundle --minify --outfile=out.js --platform=node --sourcemap",
     "lint": "eslint . --fix",
-    "test": "tsc && cross-env NODE_OPTIONS=--experimental-vm-modules npx uvu build/",
-    "utest": ""
+    "test": "uvu -r tsm Common/__tests__/",
+    "dbtest": "uvu -r tsm Common/__tests__/"
   },
   "devDependencies": {
     "@swc-node/register": "^1.5.1",

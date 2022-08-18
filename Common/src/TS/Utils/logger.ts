@@ -32,15 +32,15 @@ class ConsoleLogger implements ILogger{ // Console logger
 		if (nivel < verbosity) return;
         
 		switch (nivel) {
-		case NivelLog.verbose: console.debug(`${new Date()} [verbose] de ${caso}: ${msg}`); break;
-		case NivelLog.debug: console.log(`${new Date()} [debug] de ${caso}: ${msg}`); break;
-		case NivelLog.info: console.info(`${new Date()} [info] de  ${caso}: ${msg}`); break;
-		case NivelLog.warn: console.warn(`${new Date()} [warn0] de  ${caso}:  ${msg}`); break;
-		case NivelLog.error: console.error(`${new Date()} [error] de ${caso}: ${msg}`); break;
+		case NivelLog.verbose: console.debug(`${new Date().getSeconds()} [verbose] de ${caso}: ${msg}`); break;
+		case NivelLog.debug: console.log(`${new Date().getSeconds()} [dbg ] de ${caso}: ${msg}`); break;
+		case NivelLog.info: console.info(`${new Date().getSeconds()} [info] de  ${caso}: ${msg}`); break;
+		case NivelLog.warn: console.warn(`${new Date().getSeconds()} [warn] de  ${caso}:  ${msg}`); break;
+		case NivelLog.error: console.error(`${new Date().getSeconds()} [err ] de ${caso}: ${msg}`); break;
 		}
 	}
     constructor(){
-        this.log("log activado", Funcionalidad.alarmas)
+        // this.log("log activado", Funcionalidad.alarmas)
     }
 }
 const log = new ConsoleLogger().log; // Default 

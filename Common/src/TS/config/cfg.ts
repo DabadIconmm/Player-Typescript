@@ -1,8 +1,8 @@
 import { SettingRequester } from "./SettingsRequester";
-import { fs } from "../../IO/FileSystem";
+import { fs } from "../IO/FileSystem";
 import { config, IConfig } from "./interfaces";
-import { Funcionalidad, logFactory, NivelLog } from "../logger";
-import { PID } from "../types";
+import { Funcionalidad, logFactory, NivelLog } from "../Utils/logger";
+import { PID } from "../Utils/types";
 const log = logFactory(Funcionalidad.settings);
 
 const settings = {
@@ -28,7 +28,7 @@ class CommonConfig {
 			);
 		this.settings[nombre] = valor.toString();
 		log(
-			`config.get. Devolvemos el valor por defecto para ${nombre}: ${valor}`
+			`Devolvemos el valor por defecto para ${nombre}: ${valor}`
 		);
 	}
 	public get(nombre: string, defecto?: string): string {
@@ -67,17 +67,6 @@ class CommonConfig {
 		this.setDefault(nombre, defecto);
 		return defecto!;
 	}
-
-	//TODO estas roñas quitarlas de aqui y meterlas en las clases que las necesitan
-	public getDefaultWcfServerAddress() {
-		// Deberia ir en alguna clase de conexion al servidor
-		const protocol = this.get("protocolServer", "http://");
-		// let ret = protocol + this.get("IPMaster", Dnv.deviceInfo.ipServer()); //TODO
-		let ret = protocol + this.get("IPMaster", "acceso.denevacuatro.com");
-		if (protocol === "http://") ret += ":8090";
-		return ret;
-	}
-
 	//#endregion
 
 	public set(nombre: string, value: string) {
@@ -87,7 +76,9 @@ class CommonConfig {
 	/*
 	Pongo esto aqui en lugar de en configNode	
 	porque asumo que window.localStorage esta en
-	todas las plataformas
+	todas las plataformas. Quizas no debería de 
+	estar en cfg y deberia ser un metodo de otra
+	clase? tiene un caso de uso muy concreto...
 	*/
 	public get QRConfigurado(): boolean {
 		return window.localStorage.getItem("configurado") === "true";

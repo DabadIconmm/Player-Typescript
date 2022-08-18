@@ -1,9 +1,9 @@
 //TODO cambiar nombre a este archivo.
 
-import { Funcionalidad, logFactory, NivelLog } from "../logger";
+import { Funcionalidad, logFactory, NivelLog } from "../Utils/logger";
 import { cfg } from "./cfg";
 import QRCode from 'qrcode';
-import { deviceProperties } from "../deviceProperties";
+import { deviceProperties } from "../Utils/deviceProperties";
 
 
 

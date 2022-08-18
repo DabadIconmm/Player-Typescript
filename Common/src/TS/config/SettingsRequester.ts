@@ -1,26 +1,23 @@
-import { ConfigID, EID, ObjectID, PID } from "../types";
+import { ConfigID, EID, ObjectID, PID } from "../Utils/types";
 import { config } from "./interfaces";
 
 // # IFDEF NODE
 // import CryptoJS = require("crypto-js");
 // # ENDIF
 import * as CryptoJS from "crypto-js"
-import { debeLoguearFallosDeRed } from "../../Network/servidor";
-import { SystemInfo } from "../../SystemInfo/systemInfo";
-import { formatearFecha, formatearFechaUTCDia } from "../utiles";
-import { http, HTTPError } from "../../Network/http";
+import { debeLoguearFallosDeRed, network } from "../Network/servidor";
+import { SystemInfo } from "../SystemInfo/systemInfo";
+import { formatearFecha, formatearFechaUTCDia } from "../Utils/utiles";
+import { http, HTTPError } from "../Network/http";
 import { cfg } from "./cfg";
-import { stringToTimestamp } from "../utiles";
+import { stringToTimestamp } from "../Utils/utiles";
 
-import { Funcionalidad, logFactory, NivelLog } from "../logger";
+import { Funcionalidad, logFactory, NivelLog } from "../Utils/logger";
 
 const log = logFactory(Funcionalidad.settings);
 
 type configResponse = { doc: Document | null; timestamp?: string };
 export class SettingRequester {
-	private static defaultWsBaseUrl: string | null = null; // TODO hacer setting de esto
-	public static urlWebCfgServiceInicial: string | undefined; // TODO hacer setting de esto
-
 	private static errHandler(e: string) {
 		if (debeLoguearFallosDeRed()) {
 			// TODO cambiar al config?
@@ -34,6 +31,7 @@ export class SettingRequester {
 	}
 
 	public static async request(PlayerID: PID): Promise<config | null> {
+		if (!PlayerID) throw new Error("No tenemos PID!");
 		async function pedirConfigAlServidor(PlayerID: PID): Promise<configResponse> {
 			const response: configResponse = await (cfg.getBool(
 				"Manager_WebRequest_Enabled",
@@ -55,25 +53,6 @@ export class SettingRequester {
 
 			async function WS_DenevaRequest() { 
 				// REST
-				let url: string;
-				const urlCfg = cfg.get("URLConfigMaster", "");
-				if (urlCfg) {
-					url = urlCfg;
-					if (url.length === url.lastIndexOf("/") + 1) {
-						//Quitamos la / final por si la han metido en el setting
-						url = url.substring(0, url.lastIndexOf("/"));
-					}
-				} else {
-					url =
-						cfg.get("protocolServer", "http://") +
-						cfg.get("IPMaster", cfg.get("ipServer")) +
-						"/wsdenevarequest/api/cfg";
-					// Si encuentra IPMaster ipserver nunca deberia de lanzar una
-					// excepcion si no existiera porque no se ejecuta hasta que se necesita
-				}
-
-				const objId = cfg.getInt("MyOwnCode", 0);
-
 				const token = CryptoJS.SHA256(PlayerID + ";" + formatearFechaUTCDia(new Date())).toString(
 					CryptoJS.enc.Hex
 				);
@@ -89,19 +68,14 @@ export class SettingRequester {
 					fecha = 0;
 				}
 				const fechaHTTP = new Date(fecha).toUTCString();
-
-				if (!objId)
-					throw new Error(
-						"ObjectID no válido, no podemos pedir config a WSRequest."
-					);
-
 				const headers = {
 					"X-Pid": PlayerID,
 					"X-Token": token,
 					"If-Modified-Since": fechaHTTP,
 				};
 				
-				const res = await http.get(`${url}/${objId}`, {
+				const url = network.endpoints.getCfgREST(cfg.getInt("MyOwnCode"))
+				const res = await http.get(url, {
 					headers: headers,
 				});
 				if (res.status === 304) return <configResponse>{ doc: null };
@@ -114,25 +88,8 @@ export class SettingRequester {
 			}
 
 			async function WCF_Request() {
-				const urlFallback =
-					SettingRequester.urlWebCfgServiceInicial ??
-					cfg.getDefaultWcfServerAddress() + "/Servicios/WebConfig";
-
-				const url =
-					cfg.get("ConfigClientEndPointAddressWeb", urlFallback) +
-					"/GetConfiguracion";
-
-				log(
-					"urlWebCfgServiceInicial " + urlFallback,
-					
-					NivelLog.verbose
-				);
-				log("url " + url,  NivelLog.debug);
-				if (!PlayerID) {
-					throw new Error(
-						"No pedimos configuración, PID no válido");
-				}
-
+				const url = network.endpoints.getCfgWCF();
+				log("Pidiendo configuracion a " + url,  NivelLog.debug);
 				const xml = `<GetConfiguracion xmlns="http://tempuri.org/">\
                         <ID>${PlayerID}</ID><byObjId>false</byObjId>\
                         <lastConfigTimestamp>${cfg.get(
@@ -164,28 +121,12 @@ export class SettingRequester {
 		): Promise<string> {
 			log(
 				"Pedimos url de configuración inicial, PID = " + pid,
-				
 				NivelLog.info
 			);
 
-			SettingRequester.defaultWsBaseUrl =
-				SettingRequester.defaultWsBaseUrl ??
-				cfg.get("protocolServer", "http://") + cfg.get("ipServer");
-
-			const url =
-				SettingRequester.defaultWsBaseUrl +
-				"/WSResources/RemoteResources.asmx/GetMetadatoDispoPadre?EID=" +
-				eid +
-				"&PID=" +
-				pid +
-				"&NomMetadato=IPPublic";
+			const url = network.endpoints.getUrlCfg(eid, pid)
 
 			try {
-				log(
-					"Pidiendo url de configuracion inicial",
-					
-					NivelLog.info
-				);
 				const res = await http.get(url, {
 					headers: {
 						"X-Requested-With": "XMLHttpRequest",
@@ -194,11 +135,11 @@ export class SettingRequester {
 				});
 				SystemInfo.setEstadoConectividadConfiguracion("OK");
 				log(
-					"Respuesta de direccion de configuracion " + res.data,
-					
+					"Respuesta de direccion de configuracion " + res.data,					
 					NivelLog.debug
 				);
-				const doc = <Document>res.data;
+				// TODO puedo hacer esto sin parsearlo antes?
+				const doc = XMLDocument(res.data); 
 				const response = doc.documentElement.textContent;
 				if (
 					!response ||
@@ -211,13 +152,10 @@ export class SettingRequester {
 					"[IPMASTER]",
 					cfg.get("ipServer")
 				);
-				const protocol = cfg.get("protocolServer");
-				if (protocol === "https://")
-					return `${cfg.get(
-						"ipServer"
-					)}${replaced}/Servicios/WebConfig`;
+				if (network.protocol === "https://")
+					return `${network.ip}${replaced}/Servicios/WebConfig`;
 
-				return `${protocol}${replaced}:8090/Servicios/WebConfig`;
+				return `${network.protocol}${replaced}:8090/Servicios/WebConfig`;
 			} catch (error) {
 				const e = <HTTPError>error;
 				if (
@@ -233,8 +171,7 @@ export class SettingRequester {
 						NivelLog.error
 					);
 					return (
-						cfg.getDefaultWcfServerAddress() +
-						"/Servicios/WebConfig"
+						network.UrlWCF + "/Servicios/WebConfig"
 					);
 				}
 				SettingRequester.errHandler(e.toString());
@@ -254,13 +191,10 @@ export class SettingRequester {
 				);
 				return null;
 			}
-			if (!cfg.getInt("configPID", 0)) {
-				log(
-					"[CONFIGURACION] Nos ha llegado una respuesta de configuracion, pero no tenemos ID... Puede que acaben de reconfigurarnos, descartamos la configuración",
-					
-					NivelLog.warn
-				);
-				return null;
+			if (!PlayerID) {
+				throw new Error(
+					"[CONFIGURACION] Nos ha llegado una respuesta de configuracion pero no tenemos PID.",
+					);
 			}
 			let xmlElements = xml.getElementsByTagName("XML");
 			if (xmlElements.length === 0)
@@ -382,13 +316,7 @@ export class SettingRequester {
 	}
 	public static async getPID(ConfigID: ConfigID): Promise<{pid: PID, eid: EID}> {
 		try {
-			const url = cfg.get("protocolServer", "http://") +
-			cfg.get("IPMaster", cfg.get("ipServer")) +
-			"/WSResources/RemoteResources.asmx" + 
-			"/GetPIDByIDPlayerJS?IDPlayer=" + 
-			ConfigID +
-			"&r=" + new Date().getTime().toString();
-	
+			const url = network.endpoints.getPlayerID(ConfigID, new Date().getTime().toString())
 			const resp = (await http.get(url)).data.toString();
 			$("#divInfo").fadeOut(1000);
 	
@@ -415,12 +343,8 @@ export class SettingRequester {
 		url: string;
 		validez: Date;
 	}> {
-		const url = // TODO la cfg no esta cargada aun esto va a fallar. Obtener del /config.ini
-		// TODO cfg para llamadas rest
-			cfg.get("protocolServer", "http://") +
-			cfg.get("IPMaster", cfg.get("ipServer")) +
-			"/GetIDPlayerJS?IdPlayer=&r=" + // TODO probar sin fecha
-			new Date().getMilliseconds().toString();
+
+		const url = network.endpoints.getConfigID()
 		const resp = (await http.get(url)).data.toString(); 
 			
 	
@@ -435,5 +359,11 @@ export class SettingRequester {
 			validez: stringToTimestamp(res[1]),
 			url: res[2],
 		};
+	}
+
+	public static async loadIni(){
+		// TODO
+		// network.ip = ...
+
 	}
 }

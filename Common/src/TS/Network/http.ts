@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { debeLoguearFallosDeRed } from "./servidor";
 import { Funcionalidad, logFactory, NivelLog } from "../Utils/logger";
+import { cfg } from "../config/cfg";
 
-const log = logFactory(Funcionalidad.utiles);
+const log = logFactory(Funcionalidad.network);
 type Responses = ArrayBuffer | Document | Blob | JSON | string;
 type config = {
 	data?: unknown;
@@ -54,11 +55,11 @@ class AxiosHTTP implements IHttpRequest {
 					NivelLog.error
 				);
 			}
-			throw ex;
+			throw new Error(JSON.stringify(ex, null, 2));
 		}
 	}
 
-	public async get(url: string, cfg?: config) {
+	public async get(url: string, cfg: config = {}) {
 		const param = <AxiosRequestConfig<Responses>>cfg;
 		param.url = url;
 		param.method = "get";
@@ -82,9 +83,12 @@ class AxiosHTTP implements IHttpRequest {
 		param.method = "delete";
 		return this.send(param);
 	}
+	constructor() {
+		cfg.set("urlServer", `${cfg.get("protocolServer")}${cfg.get("ipServer")}`);
+	}
 }
 
-export const http = new  AxiosHTTP();
+export const http = new AxiosHTTP();
 /* 
     Ejemplos de uso: 
     async () => {

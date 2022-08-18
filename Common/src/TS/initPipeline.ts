@@ -10,9 +10,9 @@
 - logs
 */
 
-import { cfg } from "./Utils/config/cfg";
-import { QRconfigure } from "./Utils/config/QRconfig";
-import { SettingRequester } from "./Utils/config/SettingsRequester";
+import { cfg } from "./config/cfg";
+import { QRconfigure } from "./config/QRconfig";
+import { SettingRequester } from "./config/SettingsRequester";
 import { NivelLog, logFactory, Funcionalidad } from "./Utils/logger";
 const log = logFactory(Funcionalidad.init)
 export async function init(){
@@ -27,13 +27,16 @@ async function primeraVez(): Promise<{
 }>{
     // Wait for Cloud.isFileSystemAvailable o algo. No hace nada creo porque comenzar no existe. Ajustar pipeline?
 	// $('#configure').removeClass('configured');
+    await SettingRequester.loadIni();
     const configID = await SettingRequester.getConfigID();
     const PromPID = SettingRequester.getPID(configID.configID);
-    await QRconfigure(configID.url, configID.validez)
+
+    QRconfigure(configID.url, configID.validez) // Cargo esto mientras me llega el PID
+
     const PlayerID = await PromPID;
     await cfg.cargar(PlayerID.pid);
     // await obtenerLicencia()
-    return PlayerID;      
+    return PlayerID;
 }
 
 function ñapa(fn: Function){

@@ -1,13 +1,15 @@
 // TODO: Comprobar si se descargan bien por WCF y por WS Request
 
-import { cfg } from "../../src/TS/Utils/config/cfg";
-import { SettingRequester } from "../../src/TS/Utils/config/SettingsRequester";
+import { SettingRequester } from "../../src/TS/config/SettingsRequester";
 
-import { test, suite } from 'uvu';
+import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
-import { type } from "jquery";
+import { cfg } from "../../src/TS/config/cfg";
 
 const ConfigRequester = suite('ConfigRequester integracion')
+ConfigRequester.before(async ()=>{
+    await SettingRequester.loadIni();
+})
 ConfigRequester('should reject (PID incorrecto)', async () => {      
     try {
         await SettingRequester.request("abcd")
@@ -16,5 +18,16 @@ ConfigRequester('should reject (PID incorrecto)', async () => {
         assert.instance(error, Error);
     }
 });
+
+ConfigRequester('', async () => {
+
+})
+ConfigRequester('ConfigID', async () =>{
+
+    const res = await SettingRequester.getConfigID();
+    assert.ok(res.configID)
+    assert.ok(res.url)
+    assert.is((res.validez > new Date()), true)
+})
 
 ConfigRequester.run()

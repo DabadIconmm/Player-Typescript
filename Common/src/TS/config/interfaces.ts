@@ -1,7 +1,6 @@
 interface ICfgGetters {
 	getBool(nombre: string, defecto?: boolean): boolean;
 	getInt(nombre: string, defecto?: number): number;
-	getDefaultWcfServerAddress(): string;
 }
 export interface IConfig extends ICfgGetters {
 	//cargar(): Promise<void>;

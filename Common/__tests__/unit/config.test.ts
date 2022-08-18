@@ -1,9 +1,9 @@
 //TODO comprobar si funciona cada getter
 
-import { cfg } from "../../src/TS/Utils/config/cfg";
+import { cfg } from "../../src/TS/config/cfg";
 import { test, suite } from "uvu";
 import * as assert from "uvu/assert";
-import { SettingRequester } from "../../src/TS/Utils/config/SettingsRequester";
+import { SettingRequester } from "../../src/TS/config/SettingsRequester";
 
 //#region config
 const config = suite('cfg');
@@ -28,7 +28,7 @@ config("getBool()", () => {
 });
 config("getInt", () => {
 	cfg.set("test", "123");
-	assert.is(cfg.get("test"), 123);
+	assert.is(cfg.getInt("test"), 123);
 	cfg.set("test", "hola");
 	assert.throws(() => cfg.getInt("test"));
 });
@@ -51,7 +51,7 @@ ConfigRequester('should reject (no PID)', async () => {
 		assert.unreachable();
 	} catch (error) {
 		assert.instance(error, Error);
-	}     
+	}
 });
 ConfigRequester.run()
 //#endregion

@@ -11,12 +11,9 @@
 		"prefix": "try"
 	},
 	// uvu
-	"uvu suite": {
-		"body" : "suite('${1:nombre}', () => {\n\ttest('${2:deberia}', () =>{\n\n\t})\n});",
-		"prefix": "suite"
-	},
+
 	"uvu test": {
-		"body": "test('${2:deberia}', () =>{\n\t\n})",
+		"body": "${1:suite}('${2:deberia}', () =>{\n\t\n})",
 		"prefix": ["test", "utest"]
 	},
 	// LOGGERS
