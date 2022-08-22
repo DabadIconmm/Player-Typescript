@@ -1,4 +1,5 @@
 //Probando el first commit rama nueva
+//Probando pull request
 
 import { Funcionalidad, logFactory, NivelLog } from "./logger";
 
