@@ -1,8 +1,5 @@
 //Probando el first commit rama nueva
 
-/* eslint-disable */
-// @ts-nocheck
-
 import { Funcionalidad, logFactory, NivelLog } from "./logger";
 
 const log = logFactory(Funcionalidad.utiles);
@@ -34,18 +31,19 @@ export function formatearFechaUTCDia(date: Date) {
   return [date.getFullYear(), (mm > 9 ? "" : "0") + mm, (dd > 9 ? "" : "0") + dd].join("");
 }
 
-export function stringToTimestamp(fecha) {
+export function stringToTimestamp(fecha: string) {
   //formato "14/05/2015 09:44:36" | "14-05-2015 9:44:36"
 
   if (fecha.indexOf(":") == -1) {
     fecha = fecha + " 00:00:00";
   }
 
-  fecha = fecha.replace("/", "-");
-  fecha = fecha.replace("/", "-");
+  for (var i: number = 0; i < fecha.length; i++) {
+    fecha[i].match("/") ? (fecha = fecha.replace("/", "-")) : "";
+  }
 
-  const dias = fecha.split(" ")[0].split("-");
-  const horas = fecha.split(" ")[1].split(":");
+  const dias: string[] = fecha.split(" ")[0].split("-");
+  const horas: string[] = fecha.split(" ")[1].split(":");
 
   for (var i = 0; i < dias.length - 1; i++) {
     if (dias[i].length == 1) dias[i] = "0" + dias[i];
@@ -55,30 +53,30 @@ export function stringToTimestamp(fecha) {
     if (horas[i].length == 1) horas[i] = "0" + horas[i];
   }
 
-  //dd/mm/yyyy
+  //format dd/mm/yyyy
   if (dias[2].length == 4) {
     fecha = dias[0] + "-" + dias[1] + "-" + dias[2] + " " + horas[0] + ":" + horas[1] + ":" + horas[2];
   }
 
-  //yyyy/mm/dd
+  //format yyyy/mm/dd
   if (dias[0].length == 4) {
     fecha = dias[2] + "-" + dias[1] + "-" + dias[0] + " " + horas[0] + ":" + horas[1] + ":" + horas[2];
   }
 
-  var dateArray;
-  const reggie = /(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
-  var dateArray = reggie.exec(fecha);
+  const reggie: RegExp = /(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2}):(\d{2})/;
+  var dateArray: RegExpExecArray | null = reggie.exec(fecha);
 
-  const dateObject = new Date(
-    dateArray[3],
-    dateArray[2] - 1, // Careful, month starts at 0!
-    dateArray[1],
-    dateArray[4],
-    dateArray[5],
-    dateArray[6]
-  );
-
-  return dateObject;
+  if (dateArray !== null) {
+    const dateObject = new Date(
+      parseInt(dateArray[3]),
+      parseInt(dateArray[2]) - 1, // Careful, month starts at 0!
+      parseInt(dateArray[1]),
+      parseInt(dateArray[4]),
+      parseInt(dateArray[5]),
+      parseInt(dateArray[6])
+    );
+    return dateObject;
+  }
 }
 
 function calcularInfoHash() {
