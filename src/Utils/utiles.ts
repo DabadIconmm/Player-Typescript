@@ -80,7 +80,7 @@ export function stringToTimestamp(fecha: string) {
   }
 }
 
-function calcularInfoHash() {
+/* function calcularInfoHash() {
   //piecesHashes.push(hasher.hex().toUpperCase());
   piecesHashes.push(hasher.arrayBuffer());
   hasher = sha1.create();
@@ -97,4 +97,4 @@ function calcularInfoHash() {
   hasher.update("7:privatei0e9:publisher15:www.deneva.infoe");
   debug += "7:privatei0e9:publisher15:www.deneva.infoe";
   return hasher.hex().toUpperCase();
-}
+} */
